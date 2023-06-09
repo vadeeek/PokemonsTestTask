@@ -62,10 +62,9 @@ extension DetailsVC: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DetailsCell.id, for: indexPath) as? DetailsCell
-        else {
-            fatalError("UnSupported")
-        }
+        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DetailsCell.id, for: indexPath) as! DetailsCell
+        
         guard let stat = pokemon.stats?[indexPath.row].baseStat else { return cell }
         cell.configureData(statTitle: statsTitles[indexPath.row], value: stat)
         return cell

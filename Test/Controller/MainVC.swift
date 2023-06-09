@@ -42,10 +42,9 @@ extension MainVC: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MainCell.id, for: indexPath) as? MainCell
-        else {
-            fatalError("UnSupported")
-        }
+        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MainCell.id, for: indexPath) as! MainCell
+        
         cell.nameLabel.text = pokemonsData[indexPath.row].name?.capitalized
         return cell
     }
