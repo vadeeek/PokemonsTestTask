@@ -17,7 +17,6 @@
 		4F553CDC2A1A9830004BBCF0 /* Pokemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F553CDB2A1A9830004BBCF0 /* Pokemon.swift */; };
 		4F553CDE2A1B58C9004BBCF0 /* DetailsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F553CDD2A1B58C9004BBCF0 /* DetailsVC.swift */; };
 		4F553CE02A1B5A04004BBCF0 /* DetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F553CDF2A1B5A04004BBCF0 /* DetailsView.swift */; };
-		4F553CE22A1B5B77004BBCF0 /* NavigationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F553CE12A1B5B77004BBCF0 /* NavigationVC.swift */; };
 		4F553CE42A1BCC51004BBCF0 /* DetailsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F553CE32A1BCC51004BBCF0 /* DetailsCell.swift */; };
 /* End PBXBuildFile section */
 
@@ -33,7 +32,6 @@
 		4F553CDB2A1A9830004BBCF0 /* Pokemon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pokemon.swift; sourceTree = "<group>"; };
 		4F553CDD2A1B58C9004BBCF0 /* DetailsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsVC.swift; sourceTree = "<group>"; };
 		4F553CDF2A1B5A04004BBCF0 /* DetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsView.swift; sourceTree = "<group>"; };
-		4F553CE12A1B5B77004BBCF0 /* NavigationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationVC.swift; sourceTree = "<group>"; };
 		4F553CE32A1BCC51004BBCF0 /* DetailsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -97,7 +95,6 @@
 		4F553CCD2A1A64CF004BBCF0 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				4F553CE12A1B5B77004BBCF0 /* NavigationVC.swift */,
 				4F553CBB2A1A6408004BBCF0 /* MainVC.swift */,
 				4F553CDD2A1B58C9004BBCF0 /* DetailsVC.swift */,
 			);
@@ -219,7 +216,6 @@
 				4F553CCF2A1A64E6004BBCF0 /* MainView.swift in Sources */,
 				4F553CE42A1BCC51004BBCF0 /* DetailsCell.swift in Sources */,
 				4F553CDA2A1A965D004BBCF0 /* APIManager.swift in Sources */,
-				4F553CE22A1B5B77004BBCF0 /* NavigationVC.swift in Sources */,
 				4F553CD82A1A7E70004BBCF0 /* MainCell.swift in Sources */,
 				4F553CDE2A1B58C9004BBCF0 /* DetailsVC.swift in Sources */,
 				4F553CE02A1B5A04004BBCF0 /* DetailsView.swift in Sources */,
