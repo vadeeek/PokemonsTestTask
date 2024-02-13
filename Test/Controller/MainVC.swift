@@ -11,17 +11,31 @@ final class MainVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.title = "POKEMONS"
-        navigationItem.backButtonTitle = ""
+        setUpNavigationControllerAppearance()
         
         mainView.pokemonsCollectionView.dataSource = self
         mainView.pokemonsCollectionView.delegate = self
         
-        getPokemons(in: 45...120)
+        let randomStartIndex = Int.random(in: 1...50)
+        getPokemons(in: randomStartIndex...randomStartIndex + 20)
     }
     
     override func loadView() {
         self.view = MainView(frame: UIScreen.main.bounds)
+    }
+    
+    private func setUpNavigationControllerAppearance() {
+        self.title = "POKEMONS"
+        navigationItem.backButtonTitle = ""
+        navigationItem.hidesBackButton = true
+        
+        let appearance = UINavigationBarAppearance()
+        appearance.backgroundColor = .systemPink
+        appearance.titleTextAttributes = [.font: UIFont.boldSystemFont(ofSize: 22), NSAttributedString.Key.foregroundColor: UIColor.white]
+        
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.compactAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
     }
     
     private func getPokemons(in pokemonsIDRange: ClosedRange<Int>) {

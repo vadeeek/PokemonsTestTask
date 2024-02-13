@@ -17,12 +17,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     private func setUpNavigationController() -> UINavigationController {
-        let navigationController = UINavigationController(rootViewController: MainVC())
+        let navigationController = UINavigationController(rootViewController: LaunchVC())
         navigationController.navigationBar.barTintColor = .white
         navigationController.navigationBar.tintColor = .white
         
         let appearance = UINavigationBarAppearance()
-        appearance.backgroundColor = .systemPink
+        appearance.backgroundColor = .systemYellow
         appearance.titleTextAttributes = [.font: UIFont.boldSystemFont(ofSize: 22), NSAttributedString.Key.foregroundColor: UIColor.white]
         
         navigationController.navigationBar.standardAppearance = appearance
