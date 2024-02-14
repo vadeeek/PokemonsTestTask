@@ -7,7 +7,10 @@ final class MainView: UIView {
     
     // MARK: UICollectionView
     lazy var pokemonsCollectionView: UICollectionView = {
-        let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 10, bottom: 10, right: 10)
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(MainCell.self, forCellWithReuseIdentifier: MainCell.id)
         collectionView.backgroundColor = .clear
         collectionView.showsVerticalScrollIndicator = false
@@ -17,13 +20,13 @@ final class MainView: UIView {
     }()
     
     // MARK: UIImageView
-    private lazy var pokemonPicture: UIImageView = {
-        let image = UIImage(named: "pokemon")
-        let imageView = UIImageView(image: image)
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-
-        return imageView
-    }()
+//    private lazy var pokemonPicture: UIImageView = {
+//        let image = UIImage(named: "pokemon")
+//        let imageView = UIImageView(image: image)
+//        imageView.translatesAutoresizingMaskIntoConstraints = false
+//
+//        return imageView
+//    }()
 
     // MARK: - Life Cycle
     override init(frame: CGRect) {
@@ -38,9 +41,9 @@ final class MainView: UIView {
     }
     
     private func setupUI() {
-        self.backgroundColor = .white
-        addSubview(pokemonsCollectionView)
-        addSubview(pokemonPicture)
+        backgroundColor = .black
+        addSubviews(pokemonsCollectionView)
+//        addSubviews(pokemonsCollectionView, pokemonPicture)
     }
     
     // MARK: - Constraints
@@ -51,11 +54,11 @@ final class MainView: UIView {
             make.bottom.equalTo(self)
         }
         
-        pokemonPicture.snp.makeConstraints { make in
-            make.trailing.equalToSuperview().offset(-30)
-            make.top.equalTo(self.safeAreaLayoutGuide).offset(5)
-            make.height.equalTo(150)
-            make.width.equalTo(139)
-        }
+//        pokemonPicture.snp.makeConstraints { make in
+//            make.trailing.equalToSuperview().offset(-30)
+//            make.top.equalTo(self.safeAreaLayoutGuide).offset(5)
+//            make.height.equalTo(150)
+//            make.width.equalTo(139)
+//        }
     }
 }

@@ -7,7 +7,7 @@ final class DetailsView: UIView {
     
     // MARK: UIImageView
     private lazy var pokemonPicture: UIImageView = {
-        let image = UIImage(named: "noImage")
+        let image = UIImage(named: "noImage4")
         let imageView = UIImageView(image: image)
         imageView.layer.masksToBounds = true
         imageView.layer.cornerRadius = 10
@@ -69,25 +69,32 @@ final class DetailsView: UIView {
     }
     
     private func setupUI() {
-        self.backgroundColor = .white
-        addSubview(pokemonPicture)
-        addSubview(doubleArrow)
-        addSubview(heightLabel)
-        addSubview(idLabel)
-        addSubview(detailsCollectionView)
+        backgroundColor = .systemGray
+        addSubviews(pokemonPicture, doubleArrow, heightLabel, idLabel, detailsCollectionView)
     }
     
     func configureData(with pokemon: Pokemon) {
         if let id = pokemon.id, let height = pokemon.height {
             idLabel.text = "ID: \(id)"
-            heightLabel.text = "\(height)"
         } else {
             idLabel.text = "ID: ?"
+        }
+        if let height = pokemon.height {
+            heightLabel.text = "\(height)"
+        } else {
             heightLabel.text = "?"
+        }
+        if let urlPictureString = pokemon.sprites?.frontDefault {
+            APIManager.shared.getPokemonPicture(urlString: urlPictureString) { [weak self] pokemonPictureData in
+                guard let self else { return }
+                DispatchQueue.main.async {
+                    self.setUpPokemonPicture(with: pokemonPictureData)
+                }
+            }
         }
     }
     
-    func setUpPokemonPicture(with data: Data) {
+    private func setUpPokemonPicture(with data: Data) {
         self.pokemonPicture.image = UIImage(data: data)
     }
     

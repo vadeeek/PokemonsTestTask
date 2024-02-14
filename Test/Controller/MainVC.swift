@@ -11,8 +11,6 @@ final class MainVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setUpNavigationControllerAppearance()
-        
         mainView.pokemonsCollectionView.dataSource = self
         mainView.pokemonsCollectionView.delegate = self
         
@@ -24,15 +22,21 @@ final class MainVC: UIViewController {
         self.view = MainView(frame: UIScreen.main.bounds)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        setUpNavigationControllerAppearance()
+    }
+    
     private func setUpNavigationControllerAppearance() {
-        self.title = "POKEMONS"
+        title = "Pokemons"
         navigationItem.backButtonTitle = ""
         navigationItem.hidesBackButton = true
         
         let appearance = UINavigationBarAppearance()
-        appearance.backgroundColor = .systemPink
-        appearance.titleTextAttributes = [.font: UIFont.boldSystemFont(ofSize: 22), NSAttributedString.Key.foregroundColor: UIColor.white]
+        appearance.backgroundColor = .systemYellow // change navBar background color
+        appearance.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.black] // change navBar appearance settings
+        appearance.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.black]
         
+        navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.standardAppearance = appearance
         navigationController?.navigationBar.compactAppearance = appearance
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
@@ -61,8 +65,7 @@ extension MainVC: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MainCell.id, for: indexPath) as? MainCell else { fatalError("Unsupported cell") }
-        
-        cell.setPokemon(name: pokemonsData[indexPath.row].name?.capitalized)
+        cell.configure(with: pokemonsData[indexPath.row])
         return cell
     }
 }
@@ -81,10 +84,11 @@ extension MainVC: UICollectionViewDelegate {
 extension MainVC: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: mainView.pokemonsCollectionView.frame.width - 20, height: 40)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 3
+        let bounds = UIScreen.main.bounds
+        let width = (bounds.width - 30) / 2
+        return CGSize(
+            width: width,
+            height: width * 1.5
+        )
     }
 }

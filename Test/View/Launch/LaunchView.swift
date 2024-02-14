@@ -41,9 +41,8 @@ final class LaunchView: UIView {
     }
     
     private func setupUI() {
-        self.backgroundColor = .systemYellow
-        addSubview(pokemonLabelPicture)
-        addSubview(pokeballImage)
+        backgroundColor = .systemYellow
+        addSubviews(pokemonLabelPicture, pokeballImage)
     }
     
     private func startAnimations() {

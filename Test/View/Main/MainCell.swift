@@ -18,9 +18,21 @@ final class MainCell: UICollectionViewCell {
     }()
     
     // MARK: UIImageView
-    private lazy var arrowLogo: UIImageView = {
-        let image = UIImage(named: "arrow")
+//    private lazy var arrowLogo: UIImageView = {
+//        let image = UIImage(named: "arrow")
+//        let imageView = UIImageView(image: image)
+//        imageView.translatesAutoresizingMaskIntoConstraints = false
+//
+//        return imageView
+//    }()
+    
+    private lazy var pokemonPicture: UIImageView = {
+        let image = UIImage(named: "noImage4")
         let imageView = UIImageView(image: image)
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 15
+//        imageView.backgroundColor = .red
         imageView.translatesAutoresizingMaskIntoConstraints = false
         
         return imageView
@@ -39,35 +51,56 @@ final class MainCell: UICollectionViewCell {
     }
     
     private func setupUI() {
-        addSubview(contentView)
-        self.backgroundColor = UIColor(red: 162/255, green: 166/255, blue: 255/255, alpha: 1)
-        self.layer.borderColor = UIColor.black.cgColor
-        self.layer.borderWidth = 2
-        self.layer.cornerRadius = 15
-        contentView.addSubview(nameLabel)
-        contentView.addSubview(arrowLogo)
+        contentView.backgroundColor = .systemYellow
+//        contentView.layer.borderColor = UIColor.black.cgColor
+//        contentView.layer.borderWidth = 2
+        contentView.layer.cornerRadius = 15
+        contentView.addSubviews(pokemonPicture, nameLabel)
+//        contentView.addSubviews(pokemonPicture, nameLabel, arrowLogo)
     }
     
-    func setPokemon(name: String?) {
-        nameLabel.text = name
+//    private func setUpLayer() {
+//        contentView.layer.cornerRadius = 8
+//        contentView.layer.shadowColor = UIColor.secondaryLabel.cgColor
+//        contentView.layer.shadowRadius = 4
+//        contentView.layer.shadowOffset = CGSize(width: -4, height: 4)
+//        contentView.layer.shadowOpacity = 0.3
+//    }
+    
+    func configure(with pokemon: Pokemon) {
+        nameLabel.text = pokemon.name?.capitalized
+        if let urlPictureString = pokemon.sprites?.frontDefault {
+            APIManager.shared.getPokemonPicture(urlString: urlPictureString) { [weak self] pokemonPictureData in
+                guard let self else { return }
+                DispatchQueue.main.async {
+                    self.setUpPokemonPicture(with: pokemonPictureData)
+                }
+            }
+        }
+    }
+    
+    private func setUpPokemonPicture(with data: Data) {
+        pokemonPicture.contentMode = .scaleAspectFit
+        pokemonPicture.clipsToBounds = false
+        pokemonPicture.image = UIImage(data: data)
     }
     
     // MARK: - Constraints
     private func makeConstraints() {
-        contentView.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
+        pokemonPicture.snp.makeConstraints { make in
+            make.top.bottom.leading.trailing.equalToSuperview()
         }
         
         nameLabel.snp.makeConstraints { make in
-            make.centerY.equalTo(self.snp.centerY)
-            make.leading.equalToSuperview().offset(30)
+            make.centerX.equalToSuperview()
+            make.bottom.equalToSuperview().offset(-5)
         }
         
-        arrowLogo.snp.makeConstraints { make in
-            make.trailing.equalToSuperview().offset(-20)
-            make.centerY.equalTo(self.snp.centerY)
-            make.height.equalTo(25)
-            make.width.equalTo(25)
-        }
+//        arrowLogo.snp.makeConstraints { make in
+//            make.trailing.equalToSuperview().offset(-20)
+//            make.centerY.equalTo(self.snp.centerY)
+//            make.height.equalTo(25)
+//            make.width.equalTo(25)
+//        }
     }
 }

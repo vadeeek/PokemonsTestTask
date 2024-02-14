@@ -7,7 +7,7 @@ final class DetailsVC: UIViewController {
     
     private var pokemon: Pokemon
     
-    private let statsTitles = ["❤️ Health Points:", "⚔️ Attack:", "🛡️ Defense:", "✨ Special Attack:", "🔮 Special Defense:", "💨 Speed:"]
+    private let statsTitles = ["❤️ Health Points:", "⚔️ Attack:", "🛡️ Defense:", "🔥 Special Attack:", "🔮 Special Defense:", "💨 Speed:"]
     
     // MARK: - Life Cycle
     init(pokemon: Pokemon) {
@@ -32,21 +32,25 @@ final class DetailsVC: UIViewController {
         self.view = DetailsView(frame: UIScreen.main.bounds)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        let appearance = UINavigationBarAppearance()
+        appearance.backgroundColor = .systemYellow // change navBar background color
+        appearance.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.black] // change navBar appearance settings
+        
+        navigationController?.navigationBar.tintColor = .black // change backButton color
+        navigationController?.navigationBar.prefersLargeTitles = false
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.compactAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+    }
+    
     private func configureData() {
         detailsView.configureData(with: pokemon)
-        
-        if let urlPictureString = pokemon.sprites?.frontDefault {
-            APIManager.shared.getPokemonPicture(urlString: urlPictureString) { [weak self] pokemonPictureData in
-                guard let self else { return }
-                DispatchQueue.main.async {
-                    self.detailsView.setUpPokemonPicture(with: pokemonPictureData)
-                }
-            }
-        }
     }
 }
 
 // MARK: - Extensions
+// MARK: - UICollectionViewDataSource
 extension DetailsVC: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -67,7 +71,7 @@ extension DetailsVC: UICollectionViewDataSource {
         return cell
     }
 }
-
+// MARK: - UICollectionViewDelegateFlowLayout
 extension DetailsVC: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

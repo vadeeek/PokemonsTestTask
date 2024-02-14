@@ -39,26 +39,21 @@ final class DetailsCell: UICollectionViewCell {
     }
     
     private func setupUI() {
-        addSubview(contentView)
-        self.backgroundColor = UIColor(red: 162/255, green: 166/255, blue: 255/255, alpha: 1)
-        self.layer.borderColor = UIColor.black.cgColor
-        self.layer.borderWidth = 2
-        self.layer.cornerRadius = 15
-        contentView.addSubview(statTitle)
-        contentView.addSubview(valueLabel)
+        contentView.backgroundColor = .systemYellow
+//        contentView.backgroundColor = UIColor(red: 162/255, green: 166/255, blue: 255/255, alpha: 1)
+        contentView.layer.borderColor = UIColor.black.cgColor
+        contentView.layer.borderWidth = 2
+        contentView.layer.cornerRadius = 15
+        contentView.addSubviews(statTitle, valueLabel)
     }
     
     func configureData(statTitle: String, value: Int) {
         self.statTitle.text = statTitle
-        self.valueLabel.text = "\(value)"
+        valueLabel.text = "\(value)"
     }
     
     // MARK: - Constraints
     private func makeConstraints() {
-        contentView.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
-        }
-        
         statTitle.snp.makeConstraints { make in
             make.centerY.equalTo(self.snp.centerY)
             make.leading.equalToSuperview().offset(20)
