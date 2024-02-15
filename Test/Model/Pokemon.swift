@@ -5,6 +5,7 @@ struct Pokemon: Decodable {
     let height: Int?
     let id: Int?
     let name: String?
+    let species: Species?
     let sprites: Sprites?
     let stats: [Stat]?
     let weight: Int?
@@ -13,17 +14,18 @@ struct Pokemon: Decodable {
         case height = "height"
         case id = "id"
         case name = "name"
-        case sprites, stats, weight
+        case species, sprites, stats, weight
     }
 }
 
 // MARK: - Species
 struct Species: Decodable {
     let name: String?
+    let url: String?
 }
 
 // MARK: - Sprites
-class Sprites: Decodable {
+struct Sprites: Decodable {
     let frontDefault: String? // ссылка на изображение
 
     enum CodingKeys: String, CodingKey {

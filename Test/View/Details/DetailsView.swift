@@ -84,8 +84,8 @@ final class DetailsView: UIView {
         } else {
             heightLabel.text = "?"
         }
-        if let urlPictureString = pokemon.sprites?.frontDefault {
-            APIManager.shared.getPokemonPicture(urlString: urlPictureString) { [weak self] pokemonPictureData in
+        if let pokemonID = pokemon.id {
+            APIManager.shared.getPokemonPicture(by: pokemonID) { [weak self] pokemonPictureData in
                 guard let self else { return }
                 DispatchQueue.main.async {
                     self.setUpPokemonPicture(with: pokemonPictureData)

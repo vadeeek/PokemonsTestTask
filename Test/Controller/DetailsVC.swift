@@ -26,6 +26,7 @@ final class DetailsVC: UIViewController {
         detailsView.detailsCollectionView.delegate = self
         
         configureData()
+        getEvolutionChain()
     }
     
     override func loadView() {
@@ -46,6 +47,18 @@ final class DetailsVC: UIViewController {
     
     private func configureData() {
         detailsView.configureData(with: pokemon)
+    }
+    
+    private func getEvolutionChain() {
+        guard let pokemonSpeciesURL = pokemon.species?.url else { return }
+        APIManager.shared.getEvolutionChainArray(by: pokemonSpeciesURL) { chainArray in
+            
+            DispatchQueue.main.async {
+                for chain in chainArray {
+                    print(chain)
+                }
+            }
+        }
     }
 }
 

@@ -48,6 +48,7 @@ final class MainVC: UIViewController {
                 guard let self else { return }
                 self.pokemonsData.append(pokemon)
                 self.mainView.pokemonsCollectionView.reloadData()
+                print("\(pokemon.id) : \(pokemon.species?.url)")
             }
         }
     }
