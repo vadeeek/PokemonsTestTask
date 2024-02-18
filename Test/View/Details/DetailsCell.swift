@@ -11,7 +11,6 @@ final class DetailsCell: UICollectionViewCell {
         label.text = ""
         label.textColor = .black
         label.font = .boldSystemFont(ofSize: 18)
-        label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
     }()
@@ -21,7 +20,6 @@ final class DetailsCell: UICollectionViewCell {
         label.text = ""
         label.textColor = .black
         label.font = .systemFont(ofSize: 18, weight: .semibold)
-        label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
     }()

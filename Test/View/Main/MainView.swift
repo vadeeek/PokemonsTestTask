@@ -14,7 +14,6 @@ final class MainView: UIView {
         collectionView.register(MainCell.self, forCellWithReuseIdentifier: MainCell.id)
         collectionView.backgroundColor = .clear
         collectionView.showsVerticalScrollIndicator = false
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
         
         return collectionView
     }()
@@ -23,7 +22,6 @@ final class MainView: UIView {
 //    private lazy var pokemonPicture: UIImageView = {
 //        let image = UIImage(named: "pokemon")
 //        let imageView = UIImageView(image: image)
-//        imageView.translatesAutoresizingMaskIntoConstraints = false
 //
 //        return imageView
 //    }()

@@ -11,7 +11,6 @@ final class LaunchView: UIView {
         let imageView = UIImageView(image: image)
         imageView.contentMode = .scaleAspectFit
         imageView.alpha = 0.0
-        imageView.translatesAutoresizingMaskIntoConstraints = false
 
         return imageView
     }()
@@ -21,7 +20,6 @@ final class LaunchView: UIView {
         let imageView = UIImageView(image: image)
         imageView.contentMode = .scaleAspectFit
         imageView.alpha = 0.0
-        imageView.translatesAutoresizingMaskIntoConstraints = false
 
         return imageView
     }()

@@ -7,19 +7,11 @@ final class DetailsView: UIView {
     
     // MARK: UIImageView
     private lazy var pokemonPicture: UIImageView = {
-        let image = UIImage(named: "noImage4")
+        let image = UIImage(named: "noImage5")
         let imageView = UIImageView(image: image)
         imageView.layer.masksToBounds = true
         imageView.layer.cornerRadius = 10
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        
-        return imageView
-    }()
-    
-    private lazy var doubleArrow: UIImageView = {
-        let image = UIImage(named: "doubleArrow")
-        let imageView = UIImageView(image: image)
-        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.backgroundColor = .purple
         
         return imageView
     }()
@@ -30,7 +22,6 @@ final class DetailsView: UIView {
         label.text = "ID: "
         label.textColor = .black
         label.font = .boldSystemFont(ofSize: 18)
-        label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
     }()
@@ -40,7 +31,6 @@ final class DetailsView: UIView {
         label.text = ""
         label.textColor = .black
         label.font = .boldSystemFont(ofSize: 18)
-        label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
     }()
@@ -49,13 +39,45 @@ final class DetailsView: UIView {
     lazy var detailsCollectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
         collectionView.register(DetailsCell.self, forCellWithReuseIdentifier: DetailsCell.id)
-        collectionView.backgroundColor = .clear
+        collectionView.backgroundColor = .systemPink
         collectionView.showsVerticalScrollIndicator = false
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
         
         return collectionView
     }()
-
+    
+    lazy var evolutionCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 0)
+        let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
+        collectionView.register(EvolutionCell.self, forCellWithReuseIdentifier: EvolutionCell.id)
+        collectionView.backgroundColor = .systemBlue
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.layer.cornerRadius = 25
+        collectionView.layer.maskedCorners = [.layerMinXMaxYCorner]
+        collectionView.backgroundColor = UIColor(patternImage: UIImage(named: "evolutionBG")!)
+        collectionView.alpha = 0.85
+        
+        return collectionView
+    }()
+    
+    // MARK: UIScrollView
+    private lazy var scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+//        scrollView.showsVerticalScrollIndicator = true
+        scrollView.backgroundColor = .red
+        
+        return scrollView
+    }()
+    
+    // MARK: UIView
+    private lazy var containerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .green
+        
+        return view
+    }()
+    
     // MARK: - Life Cycle
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -70,7 +92,9 @@ final class DetailsView: UIView {
     
     private func setupUI() {
         backgroundColor = .systemGray
-        addSubviews(pokemonPicture, doubleArrow, heightLabel, idLabel, detailsCollectionView)
+        addSubviews(scrollView)
+        scrollView.addSubviews(containerView)
+        containerView.addSubviews(pokemonPicture, heightLabel, idLabel, detailsCollectionView, evolutionCollectionView)
     }
     
     func configureData(with pokemon: Pokemon) {
@@ -85,11 +109,17 @@ final class DetailsView: UIView {
             heightLabel.text = "?"
         }
         if let pokemonID = pokemon.id {
-            APIManager.shared.getPokemonPicture(by: pokemonID) { [weak self] pokemonPictureData in
-                guard let self else { return }
-                DispatchQueue.main.async {
-                    self.setUpPokemonPicture(with: pokemonPictureData)
-                }
+            getPokemonPicture(pokemonID)
+        }
+        
+        setUpPokemonAbilities(pokemon)
+    }
+    
+    private func getPokemonPicture(_ pokemonID: Int) {
+        APIManager.shared.getPokemonPicture(by: pokemonID) { [weak self] pokemonPictureData in
+            guard let self else { return }
+            DispatchQueue.main.async {
+                self.setUpPokemonPicture(with: pokemonPictureData)
             }
         }
     }
@@ -98,34 +128,48 @@ final class DetailsView: UIView {
         self.pokemonPicture.image = UIImage(data: data)
     }
     
+    private func setUpPokemonAbilities(_ pokemon: Pokemon) {
+        if let abilities = pokemon.abilities {
+            for ability in abilities {
+                print(ability.ability?.name)
+            }
+        }
+    }
+    
     // MARK: - Constraints
     private func makeConstraints() {
+        scrollView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        containerView.snp.makeConstraints { make in
+            make.edges.equalTo(scrollView)
+            make.width.equalToSuperview()
+            make.height.equalToSuperview().multipliedBy(3)
+        }
         pokemonPicture.snp.makeConstraints { make in
-            make.top.equalTo(self.safeAreaLayoutGuide).offset(30)
-            make.centerX.equalToSuperview()
+            make.top.equalTo(containerView.safeAreaLayoutGuide).offset(30)
+            make.centerX.equalTo(containerView)
             make.height.width.equalTo(285)
         }
-        
-        doubleArrow.snp.makeConstraints { make in
-            make.top.bottom.equalTo(pokemonPicture)
-            make.centerX.equalTo(pokemonPicture.snp.trailing).offset(8)
-        }
-        
         idLabel.snp.makeConstraints { make in
             make.bottom.equalTo(pokemonPicture).offset(-5)
             make.leading.equalTo(pokemonPicture).offset(10)
         }
-        
         heightLabel.snp.makeConstraints { make in
-            make.leading.equalTo(doubleArrow.snp.centerX).offset(10)
-            make.centerY.equalTo(doubleArrow)
+            make.leading.equalTo(pokemonPicture.snp.trailing).offset(10)
+            make.centerY.equalTo(pokemonPicture)
         }
-        
         detailsCollectionView.snp.makeConstraints { make in
             make.top.equalTo(pokemonPicture.snp.bottom).offset(20)
-            make.bottom.equalToSuperview()
-            make.centerX.equalToSuperview()
+            make.height.equalToSuperview().multipliedBy(0.13)
+            make.centerX.equalTo(containerView)
             make.width.equalTo(270)
+        }
+        evolutionCollectionView.snp.makeConstraints { make in
+            make.top.equalTo(detailsCollectionView.snp.bottom).offset(20)
+            make.height.equalToSuperview().multipliedBy(0.07)
+            make.leading.equalTo(containerView).offset(15)
+            make.trailing.equalTo(containerView).offset(-15)
         }
     }
 }

@@ -14,8 +14,14 @@ final class MainVC: UIViewController {
         mainView.pokemonsCollectionView.dataSource = self
         mainView.pokemonsCollectionView.delegate = self
         
-        let randomStartIndex = Int.random(in: 1...50)
-        getPokemons(in: randomStartIndex...randomStartIndex + 20)
+        var randomPokemonsIDsList: Set<Int> = []
+        while randomPokemonsIDsList.count != 20 {
+            let randomPokemonID = Int.random(in: 1...1302)
+            randomPokemonsIDsList.insert(randomPokemonID)
+//            getPokemons(by: randomPokemonsIDsList)
+            getPokemon(by: randomPokemonID)
+            print("count: \(randomPokemonsIDsList.count)")
+        }
     }
     
     override func loadView() {
@@ -42,8 +48,10 @@ final class MainVC: UIViewController {
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
     }
     
-    private func getPokemons(in pokemonsIDRange: ClosedRange<Int>) {
-        APIManager.shared.getPokemon(in: pokemonsIDRange) { [weak self] pokemon in
+//    private func getPokemons(in pokemonsIDRange: ClosedRange<Int>) {
+//    private func getPokemons(by pokemonsIDsArray: Set<Int>) {
+    private func getPokemon(by id: Int) {
+        APIManager.shared.getPokemon(by: id) { [weak self] pokemon in
             DispatchQueue.main.async {
                 guard let self else { return }
                 self.pokemonsData.append(pokemon)
@@ -76,8 +84,14 @@ extension MainVC: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
+        if let cell = collectionView.cellForItem(at: indexPath) {
+            cell.contentView.alpha = 0.5
+            UIView.animate(withDuration: 0.2) {
+                cell.contentView.alpha = 1.0
+            }
+        }
         let viewController = DetailsVC(pokemon: pokemonsData[indexPath.row])
-        viewController.title = pokemonsData[indexPath.row].name?.uppercased()
+//        viewController.title = pokemonsData[indexPath.row].name?.uppercased()
         navigationController?.pushViewController(viewController, animated: true)
     }
 }

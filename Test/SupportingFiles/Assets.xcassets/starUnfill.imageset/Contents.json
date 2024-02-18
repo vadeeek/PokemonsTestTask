@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "arrowtriangle.right.svg",
+      "filename" : "star.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "arrowtriangle.right 1.svg",
+      "filename" : "star 1.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "arrowtriangle.right 2.svg",
+      "filename" : "star 2.svg",
       "idiom" : "universal",
       "scale" : "3x"
     }
