@@ -4,20 +4,20 @@ import SnapKit
 final class DetailsView: UIView {
     
     // MARK: - Properties
+    weak var delegate: DetailsViewDelegate?
     
     // MARK: UIImageView
-    private lazy var pokemonPicture: UIImageView = {
-        let image = UIImage(named: "noImage5")
+    private let pokemonPicture: UIImageView = {
+        let image = Resources.Images.Pokemon.pokemonPictureNoImage
         let imageView = UIImageView(image: image)
         imageView.layer.masksToBounds = true
         imageView.layer.cornerRadius = 10
-        imageView.backgroundColor = .purple
         
         return imageView
     }()
     
     // MARK: UILabel
-    private lazy var idLabel: UILabel = {
+    private let idLabel: UILabel = {
         let label = UILabel()
         label.text = "ID: "
         label.textColor = .black
@@ -26,9 +26,8 @@ final class DetailsView: UIView {
         return label
     }()
     
-    private lazy var heightLabel: UILabel = {
+    private let heightLabel: UILabel = {
         let label = UILabel()
-        label.text = ""
         label.textColor = .black
         label.font = .boldSystemFont(ofSize: 18)
         
@@ -36,46 +35,52 @@ final class DetailsView: UIView {
     }()
     
     // MARK: UICollectionView
-    lazy var detailsCollectionView: UICollectionView = {
+    let detailsCollectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
         collectionView.register(DetailsCell.self, forCellWithReuseIdentifier: DetailsCell.id)
-        collectionView.backgroundColor = .systemPink
         collectionView.showsVerticalScrollIndicator = false
         
         return collectionView
     }()
     
-    lazy var evolutionCollectionView: UICollectionView = {
+    let evolutionCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.sectionInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 0)
         let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
         collectionView.register(EvolutionCell.self, forCellWithReuseIdentifier: EvolutionCell.id)
-        collectionView.backgroundColor = .systemBlue
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.layer.cornerRadius = 25
         collectionView.layer.maskedCorners = [.layerMinXMaxYCorner]
-        collectionView.backgroundColor = UIColor(patternImage: UIImage(named: "evolutionBG")!)
+        collectionView.backgroundColor = UIColor(patternImage: (Resources.Images.DetailsScreen.evolutionBG)!)
         collectionView.alpha = 0.85
         
         return collectionView
     }()
     
     // MARK: UIScrollView
-    private lazy var scrollView: UIScrollView = {
+    private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
-//        scrollView.showsVerticalScrollIndicator = true
-        scrollView.backgroundColor = .red
+        scrollView.showsVerticalScrollIndicator = false
         
         return scrollView
     }()
     
     // MARK: UIView
-    private lazy var containerView: UIView = {
+    private let containerView: UIView = {
         let view = UIView()
-        view.backgroundColor = .green
         
         return view
+    }()
+    
+    // MARK: UIButton
+    private lazy var starButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "star"), for: .normal)
+        button.tintColor = .yellow
+        button.addTarget(self, action: #selector(starButtonPressed(_:)), for: .touchUpInside)
+        
+        return button
     }()
     
     // MARK: - Life Cycle
@@ -84,6 +89,8 @@ final class DetailsView: UIView {
         
         setupUI()
         makeConstraints()
+        // DEBUG:
+        debug()
     }
     
     required init?(coder: NSCoder) {
@@ -94,10 +101,19 @@ final class DetailsView: UIView {
         backgroundColor = .systemGray
         addSubviews(scrollView)
         scrollView.addSubviews(containerView)
-        containerView.addSubviews(pokemonPicture, heightLabel, idLabel, detailsCollectionView, evolutionCollectionView)
+        containerView.addSubviews(pokemonPicture, heightLabel, idLabel, detailsCollectionView, evolutionCollectionView, starButton)
     }
     
-    func configureData(with pokemon: Pokemon) {
+    // DEBUG:
+    private func debug() {
+        pokemonPicture.backgroundColor = .purple
+        scrollView.backgroundColor = .red
+        containerView.backgroundColor = .green
+        detailsCollectionView.backgroundColor = .systemPink
+        starButton.backgroundColor = .red
+    }
+    
+    func configureData(with pokemon: EnhancedPokemon) {
         if let id = pokemon.id, let height = pokemon.height {
             idLabel.text = "ID: \(id)"
         } else {
@@ -108,32 +124,27 @@ final class DetailsView: UIView {
         } else {
             heightLabel.text = "?"
         }
-        if let pokemonID = pokemon.id {
-            getPokemonPicture(pokemonID)
+        if let pictureUrlString = pokemon.pictureUrlString {
+            setupPokemonPicture(with: URL(string: pictureUrlString))
         }
-        
-        setUpPokemonAbilities(pokemon)
+        setupPokemonAbilities(pokemon)
     }
     
-    private func getPokemonPicture(_ pokemonID: Int) {
-        APIManager.shared.getPokemonPicture(by: pokemonID) { [weak self] pokemonPictureData in
-            guard let self else { return }
-            DispatchQueue.main.async {
-                self.setUpPokemonPicture(with: pokemonPictureData)
-            }
-        }
+    private func setupPokemonPicture(with url: URL?) {
+        pokemonPicture.sd_setImage(with: url)
     }
     
-    private func setUpPokemonPicture(with data: Data) {
-        self.pokemonPicture.image = UIImage(data: data)
-    }
-    
-    private func setUpPokemonAbilities(_ pokemon: Pokemon) {
+    private func setupPokemonAbilities(_ pokemon: EnhancedPokemon) {
         if let abilities = pokemon.abilities {
             for ability in abilities {
-                print(ability.ability?.name)
+                print(ability.name)
             }
         }
+    }
+    
+    @objc private func starButtonPressed(_ sender: UIButton) {
+        delegate?.updateFavoritePokemon()
+//        delegate?.addToFavorites()
     }
     
     // MARK: - Constraints
@@ -150,6 +161,10 @@ final class DetailsView: UIView {
             make.top.equalTo(containerView.safeAreaLayoutGuide).offset(30)
             make.centerX.equalTo(containerView)
             make.height.width.equalTo(285)
+        }
+        starButton.snp.makeConstraints { make in
+            make.trailing.top.equalTo(pokemonPicture)
+            make.width.height.equalTo(pokemonPicture.snp.width).multipliedBy(0.25)
         }
         idLabel.snp.makeConstraints { make in
             make.bottom.equalTo(pokemonPicture).offset(-5)

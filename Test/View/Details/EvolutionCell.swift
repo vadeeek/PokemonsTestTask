@@ -6,35 +6,46 @@ final class EvolutionCell: UICollectionViewCell {
     static let id = "evolution"
     
     // MARK: UILabel
-    private lazy var nameLabel: UILabel = {
+    private let nameLabel: UILabel = {
         let label = UILabel()
-        label.text = ""
         label.textColor = .black
         label.font = .boldSystemFont(ofSize: 18)
         
         return label
     }()
     
-    private lazy var idLabel: UILabel = {
+    private let idLabel: UILabel = {
         let label = UILabel()
-        label.text = ""
         label.textColor = .black
         label.font = .systemFont(ofSize: 18, weight: .semibold)
         
         return label
     }()
     
+    private let currentLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Current"
+        label.textColor = .white
+        label.backgroundColor = .red
+        label.layer.borderWidth = 2
+        label.layer.borderColor = UIColor.black.cgColor
+        label.layer.cornerRadius = 10
+        label.layer.masksToBounds = true
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 14, weight: .semibold)
+        
+        return label
+    }()
+    
     // MARK: UIImageView
-    private lazy var pokemonPicture: UIImageView = {
-        let image = UIImage(named: "")
-        let imageView = UIImageView(image: image)
+    private let pokemonPicture: UIImageView = {
+        let imageView = UIImageView(image:  UIImage(named: ""))
         imageView.layer.cornerRadius = 49
         imageView.layer.borderColor = UIColor.white.cgColor
         imageView.layer.borderWidth = 4
         imageView.backgroundColor = .brown
         imageView.contentMode = .scaleAspectFill
 //        imageView.clipsToBounds = true
-        
         imageView.layer.shadowColor = UIColor.black.cgColor
         imageView.layer.shadowOffset = CGSize(width: 7, height: 5)
 //        contentView.layer.shadowRadius = CGSize(width: <#T##Double#>, height: <#T##Double#>)
@@ -43,14 +54,9 @@ final class EvolutionCell: UICollectionViewCell {
         return imageView
     }()
     
-    private lazy var arrowImage: UIImageView = {
-        let image = UIImage(named: "arrow")
+    private let arrowImage: UIImageView = {
+        let image = Resources.Images.DetailsScreen.evolutionArrow
         let imageView = UIImageView(image: image)
-
-//        imageView.layer.shadowColor = UIColor.black.cgColor
-//        imageView.layer.shadowOffset = CGSize(width: 7, height: 5)
-//        contentView.layer.shadowRadius = CGSize(width: <#T##Double#>, height: <#T##Double#>)
-//        imageView.layer.shadowOpacity = 0.3
         
         return imageView
     }()
@@ -61,6 +67,8 @@ final class EvolutionCell: UICollectionViewCell {
         
         setupUI()
         makeConstraints()
+        // DEBUG:
+        debug()
     }
     
     required init?(coder: NSCoder) {
@@ -68,34 +76,25 @@ final class EvolutionCell: UICollectionViewCell {
     }
     
     private func setupUI() {
-        contentView.backgroundColor = .magenta
-//        contentView.backgroundColor = UIColor(red: 162/255, green: 166/255, blue: 255/255, alpha: 1)
-//        contentView.layer.borderColor = UIColor.white.cgColor
-//        contentView.layer.borderWidth = 4
-//        contentView.layer.cornerRadius = 49
-        
-        // shadow
-//        contentView.layer.shadowColor = UIColor.black.cgColor
-//        contentView.layer.shadowOffset = CGSize(width: 7, height: 5)
-//        contentView.layer.shadowRadius = CGSize(width: <#T##Double#>, height: <#T##Double#>)
-//        contentView.layer.shadowOpacity = 0.3
-        
-        contentView.addSubviews(pokemonPicture, nameLabel, idLabel, arrowImage)
+//        contentView.backgroundColor = .magenta
+        contentView.addSubviews(pokemonPicture, nameLabel, idLabel, arrowImage, currentLabel)
     }
     
-    func configure(with pokemon: Pokemon, and pokemonEvolutionPicture: Data, and isLastPokemonFlag: Bool) {
-//        dsadas
-//        передавать сюда айдишники покемонов из эволюции чтобы отображать их инфу и подгружать потом при тапе на эволюцию и переходе на новый экран
-        self.nameLabel.text = pokemon.name?.capitalized
-        if let id = pokemon.id {
+    // DEBUG:
+    private func debug() {
+        contentView.backgroundColor = .magenta
+    }
+    
+    func configure(evolutionCellModel: EvolutionCellModel) {
+        self.nameLabel.text = evolutionCellModel.pokemon.name?.capitalized
+        if let id = evolutionCellModel.pokemon.id {
             self.idLabel.text = "№ \(id)"
         }
-        
-        pokemonPicture.image = UIImage(data: pokemonEvolutionPicture)
-        
-        if isLastPokemonFlag {
-            arrowImage.isHidden = true
+        if let pictureUrlString = evolutionCellModel.pokemon.pictureUrlString {
+            pokemonPicture.sd_setImage(with: URL(string: pictureUrlString))
         }
+        arrowImage.isHidden = evolutionCellModel.isLastEvolutionInChain
+        currentLabel.isHidden = !evolutionCellModel.isCurrentEvolutionOnScreen
         
     }
     
@@ -105,12 +104,10 @@ final class EvolutionCell: UICollectionViewCell {
             make.centerX.equalTo(pokemonPicture)
             make.bottom.equalTo(idLabel.snp.top)
         }
-        
         idLabel.snp.makeConstraints { make in
             make.bottom.equalTo(contentView)
             make.centerX.equalTo(pokemonPicture)
         }
-        
         pokemonPicture.snp.makeConstraints { make in
             make.width.height.equalTo(contentView.snp.width).multipliedBy(0.6)
             make.top.leading.equalTo(contentView)
@@ -119,6 +116,11 @@ final class EvolutionCell: UICollectionViewCell {
             make.leading.equalTo(pokemonPicture.snp.trailing).offset(17)
             make.centerY.equalTo(pokemonPicture)
             make.height.width.equalTo(pokemonPicture.snp.height).multipliedBy(0.25)
+        }
+        currentLabel.snp.makeConstraints { make in
+            make.leading.top.equalTo(contentView)
+            make.width.equalTo(contentView).multipliedBy(0.4)
+            make.height.equalTo(contentView).multipliedBy(0.15)
         }
     }
 }

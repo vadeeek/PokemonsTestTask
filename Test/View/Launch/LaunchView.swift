@@ -6,24 +6,24 @@ final class LaunchView: UIView {
     // MARK: - Properties
     
     // MARK: UIImageView
-    private lazy var pokemonLabelPicture: UIImageView = {
-        let image = UIImage(named: "pokemonLabel")
+    private let pokemonLabelPicture: UIImageView = {
+        let image = Resources.Images.LaunchScreen.pokemonLabel
         let imageView = UIImageView(image: image)
         imageView.contentMode = .scaleAspectFit
         imageView.alpha = 0.0
-
+        
         return imageView
     }()
     
-    private lazy var pokeballImage: UIImageView = {
-        let image = UIImage(named: "pokeball")
+    private let pokeballImage: UIImageView = {
+        let image = Resources.Images.LaunchScreen.pokeball
         let imageView = UIImageView(image: image)
         imageView.contentMode = .scaleAspectFit
         imageView.alpha = 0.0
-
+        
         return imageView
     }()
-
+    
     // MARK: - Life Cycle
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -67,15 +67,14 @@ final class LaunchView: UIView {
             self.pokeballImage.alpha = 1.0
         }, completion: nil)
     }
-
-// MARK: - Constraints
+    
+    // MARK: - Constraints
     private func makeConstraints() {
         pokemonLabelPicture.snp.makeConstraints { make in
             make.leading.equalTo(self.safeAreaLayoutGuide).offset(40)
             make.trailing.equalTo(self.safeAreaLayoutGuide).offset(-40)
             make.centerY.equalToSuperview().offset(-110)
         }
-        
         pokeballImage.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(pokemonLabelPicture.snp.bottom).offset(-15)
