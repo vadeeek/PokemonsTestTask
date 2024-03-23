@@ -7,7 +7,10 @@ final class CompareCell: UICollectionViewCell {
     // MARK: - Properties
     static let id = "compare"
     
+    private var currentPokemon: EnhancedPokemon?
+    private var selectedPokemonID: Int?
     private var pokemonTypes: [String] = []
+    private let statsTitles = ["❤️ HP:", "⚔️ A:", "🛡️ D:", "🔥 SA:", "🔮 SD:", "💨 S:"]
     
     // MARK: UILabel
     private let nameLabel: UILabel = {
@@ -15,7 +18,6 @@ final class CompareCell: UICollectionViewCell {
         label.lineBreakMode = .byTruncatingTail
         label.textColor = .black
         label.font = .boldSystemFont(ofSize: 18)
-        
         return label
     }()
     
@@ -23,7 +25,6 @@ final class CompareCell: UICollectionViewCell {
         let label = UILabel()
         label.textColor = .black
         label.font = .boldSystemFont(ofSize: 16)
-        
         return label
     }()
     
@@ -36,7 +37,6 @@ final class CompareCell: UICollectionViewCell {
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 15
         imageView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        
         return imageView
     }()
     
@@ -48,7 +48,13 @@ final class CompareCell: UICollectionViewCell {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(PokemonTypeCell.self, forCellWithReuseIdentifier: PokemonTypeCell.id)
         collectionView.showsHorizontalScrollIndicator = false
-        
+        return collectionView
+    }()
+    
+    let characteristicsCollectionView: UICollectionView = {
+        let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
+        collectionView.register(DetailsCell.self, forCellWithReuseIdentifier: DetailsCell.id)
+        collectionView.showsVerticalScrollIndicator = false
         return collectionView
     }()
     
@@ -58,7 +64,6 @@ final class CompareCell: UICollectionViewCell {
         view.backgroundColor = .systemOrange
         view.layer.cornerRadius = 15
         view.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner]
-        
         return view
     }()
     
@@ -68,6 +73,8 @@ final class CompareCell: UICollectionViewCell {
         
         pokemonTypesCollectionView.dataSource = self
         pokemonTypesCollectionView.delegate = self
+        characteristicsCollectionView.dataSource = self
+        characteristicsCollectionView.delegate = self
         
         setupUI()
         makeConstraints()
@@ -81,7 +88,7 @@ final class CompareCell: UICollectionViewCell {
     
     private func setupUI() {
         //        contentView.layer.cornerRadius = 15
-        contentView.addSubviews(pokemonPicture, idLabel, shortInfoFrame, nameLabel,  pokemonTypesCollectionView)
+        contentView.addSubviews(pokemonPicture, idLabel, shortInfoFrame, nameLabel,  pokemonTypesCollectionView, characteristicsCollectionView)
     }
     
     // DEBUG:
@@ -89,9 +96,12 @@ final class CompareCell: UICollectionViewCell {
         contentView.backgroundColor = .white
         nameLabel.backgroundColor = .systemPink
         pokemonTypesCollectionView.backgroundColor = .green
+        characteristicsCollectionView.backgroundColor = .systemGray
     }
     
-    func configure(with pokemon: EnhancedPokemon) {
+    func configureData(with pokemon: EnhancedPokemon, id: Int) {
+        self.currentPokemon = pokemon
+        self.selectedPokemonID = id
         nameLabel.text = pokemon.name?.capitalized ?? "???"
         
         if let pokemonID = pokemon.id {
@@ -153,6 +163,11 @@ final class CompareCell: UICollectionViewCell {
             make.top.equalTo(nameLabel.snp.bottom).offset(5)
             make.height.equalTo(shortInfoFrame.snp.height).multipliedBy(0.5)
         }
+        characteristicsCollectionView.snp.makeConstraints { make in
+            make.top.equalTo(pokemonTypesCollectionView.snp.bottom).offset(20)
+            make.height.equalToSuperview().multipliedBy(0.25)
+            make.leading.trailing.equalToSuperview()
+        }
     }
 }
 
@@ -162,15 +177,33 @@ extension CompareCell: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        pokemonTypes.count
+        if collectionView == characteristicsCollectionView {
+            if let count = currentPokemon?.stats?.count {
+                return count
+            } else {
+                return 0
+            }
+        } else {
+            return pokemonTypes.count
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokemonTypeCell.id, for: indexPath) as? PokemonTypeCell else { fatalError("Unsupported cell") }
-        let pokemonTypeName = pokemonTypes[indexPath.row]
-        cell.configure(with: pokemonTypeName)
-        return cell
+        if collectionView == characteristicsCollectionView {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DetailsCell.id, for: indexPath) as? DetailsCell else { fatalError("Unsupported cell") }
+            
+            guard let stat = currentPokemon?.stats?[indexPath.row].baseStat else { return cell }
+            if let id = self.selectedPokemonID {
+                cell.configureDataForCompare(statTitle: statsTitles[indexPath.row], value: stat, id: id)
+            }
+            return cell
+        } else {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokemonTypeCell.id, for: indexPath) as? PokemonTypeCell else { fatalError("Unsupported cell") }
+            let pokemonTypeName = pokemonTypes[indexPath.row]
+            cell.configure(with: pokemonTypeName)
+            return cell
+        }
     }
 }
 // MARK: - UICollectionViewDelegateFlowLayout
@@ -178,11 +211,23 @@ extension CompareCell: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        let bounds = collectionView.bounds.width
-        let width = (bounds) / 1.5
-        return CGSize(
-            width: width,
-            height: width / 4.6
-        )
+        if collectionView == characteristicsCollectionView {
+            return CGSize(width: characteristicsCollectionView.frame.width, height: 40)
+        } else {
+            let bounds = collectionView.bounds.width
+            let width = (bounds) / 1.5
+            return CGSize(
+                width: width,
+                height: width / 4.6
+            )
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        if collectionView == characteristicsCollectionView {
+            return 5
+        } else {
+            return 10
+        }
     }
 }

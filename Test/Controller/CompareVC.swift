@@ -3,9 +3,8 @@ import UIKit
 final class CompareVC: UIViewController {
     
     // MARK: - Properties
-    var selectedPokemons: [EnhancedPokemon] = []
-    
     private var compareView: CompareView { return self.view as! CompareView }
+    private var selectedPokemons: [EnhancedPokemon] = []
 
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -83,7 +82,8 @@ extension CompareVC: UICollectionViewDataSource {
         
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CompareCell.id, for: indexPath) as? CompareCell else { fatalError("Unsupported cell") }
         if selectedPokemons.count > 0 {
-            cell.configure(with: selectedPokemons[indexPath.row])
+            cell.configureData(with: selectedPokemons[indexPath.row], id: indexPath.row)
+            cell.characteristicsCollectionView.reloadData()
         }
         return cell
     }
