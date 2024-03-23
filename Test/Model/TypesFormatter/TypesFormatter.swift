@@ -1,9 +1,7 @@
-import Foundation
 import UIKit
 
 final class TypeFormatter {
     
-    // MARK: - Properties
     static let shared = TypeFormatter()
     
     func formate(typeString: String) -> (String, UIColor) {
