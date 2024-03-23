@@ -1,4 +1,5 @@
 import UIKit
+import SnapKit
 
 final class DetailsCell: UICollectionViewCell {
     
@@ -10,7 +11,6 @@ final class DetailsCell: UICollectionViewCell {
         let label = UILabel()
         label.textColor = .black
         label.font = .boldSystemFont(ofSize: 18)
-        
         return label
     }()
     
@@ -18,7 +18,6 @@ final class DetailsCell: UICollectionViewCell {
         let label = UILabel()
         label.textColor = .black
         label.font = .systemFont(ofSize: 18, weight: .semibold)
-        
         return label
     }()
     
@@ -47,6 +46,25 @@ final class DetailsCell: UICollectionViewCell {
         valueLabel.text = "\(value)"
     }
     
+    func configureDataForCompare(statTitle: String, value: Int, id: Int) {
+        contentView.backgroundColor = .clear
+        contentView.layer.borderWidth = 0
+        if id % 2 == 0 {
+            self.statTitle.isHidden = false
+            self.removeConstraints()
+            self.makeConstraints()
+        } else {
+            self.statTitle.isHidden = true
+            self.valueLabel.snp.removeConstraints()
+            self.valueLabel.snp.makeConstraints { make in
+                make.centerY.equalTo(self.snp.centerY)
+                make.leading.equalToSuperview().offset(20)
+            }
+        }
+        self.statTitle.text = statTitle
+        valueLabel.text = "\(value)"
+    }
+    
     // MARK: - Constraints
     private func makeConstraints() {
         statTitle.snp.makeConstraints { make in
@@ -57,5 +75,10 @@ final class DetailsCell: UICollectionViewCell {
             make.trailing.equalToSuperview().offset(-20)
             make.centerY.equalTo(self.snp.centerY)
         }
+    }
+    
+    private func removeConstraints() {
+        statTitle.snp.removeConstraints()
+        valueLabel.snp.removeConstraints()
     }
 }
