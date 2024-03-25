@@ -46,15 +46,28 @@ final class DetailsCell: UICollectionViewCell {
         valueLabel.text = "\(value)"
     }
     
-    func configureDataForCompare(statTitle: String, value: Int, id: Int) {
+    func configureForCompare(statTitle: String, value: Int, selectedPokemonID: Int, statID: Int) {
+        valueLabel.font = .systemFont(ofSize: 18, weight: .semibold)
+        
+        let attributeWinnerArray = ComparePokemonsManager.shared.selectedPokemonsAttributesWinner
         contentView.backgroundColor = .clear
         contentView.layer.borderWidth = 0
-        if id % 2 == 0 {
+        if selectedPokemonID % 2 == 0 {
             self.statTitle.isHidden = false
+            if let attributeWinner = attributeWinnerArray.indices.contains(statID) ? attributeWinnerArray[statID] : nil {
+                if attributeWinner == .left {
+                    self.valueLabel.font = .systemFont(ofSize: 22, weight: .semibold)
+                }
+            }
             self.removeConstraints()
             self.makeConstraints()
         } else {
             self.statTitle.isHidden = true
+            if let attributeWinner = attributeWinnerArray.indices.contains(statID) ? attributeWinnerArray[statID] : nil {
+                if attributeWinner == .right {
+                    self.valueLabel.font = .systemFont(ofSize: 22, weight: .semibold)
+                }
+            }
             self.valueLabel.snp.removeConstraints()
             self.valueLabel.snp.makeConstraints { make in
                 make.centerY.equalTo(self.snp.centerY)

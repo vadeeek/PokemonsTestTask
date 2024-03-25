@@ -22,7 +22,7 @@ final class CompareVC: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         setupNavigationControllerAppearance()
-        getSelectedPokemons()
+        prepareSelectedPokemonsData()
     }
     
     private func addClearButton() {
@@ -41,8 +41,8 @@ final class CompareVC: UIViewController {
     }
     
     private func clearSelectedPokemons() {
-        selectedPokemons = []
         ComparePokemonsManager.shared.clearSelectedPokemons()
+        selectedPokemons = ComparePokemonsManager.shared.selectedPokemons
     }
     
     private func setupNavigationControllerAppearance() {
@@ -61,7 +61,7 @@ final class CompareVC: UIViewController {
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
     }
     
-    private func getSelectedPokemons() {
+    private func prepareSelectedPokemonsData() {
         DispatchQueue.main.async {
             self.selectedPokemons = ComparePokemonsManager.shared.selectedPokemons
             self.compareView.selectedPokemonsCollectionView.reloadData()

@@ -117,7 +117,6 @@ final class CompareCell: UICollectionViewCell {
         } else {
             idLabel.text = "???"
         }
-        
         if let types = pokemon.types {
             for type in types {
                 if let typeName = type.name {
@@ -195,7 +194,7 @@ extension CompareCell: UICollectionViewDataSource {
             
             guard let stat = currentPokemon?.stats?[indexPath.row].baseStat else { return cell }
             if let id = self.selectedPokemonID {
-                cell.configureDataForCompare(statTitle: statsTitles[indexPath.row], value: stat, id: id)
+                cell.configureForCompare(statTitle: statsTitles[indexPath.row], value: stat, selectedPokemonID: id, statID: indexPath.row)
             }
             return cell
         } else {
