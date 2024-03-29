@@ -97,7 +97,7 @@ extension CompareVC: UICollectionViewDelegateFlowLayout {
         let width = (bounds.width - 30) / 2
         return CGSize(
             width: width,
-            height: width * 6.0
+            height: width * 3.35
         )
     }
 }

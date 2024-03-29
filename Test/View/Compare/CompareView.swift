@@ -4,15 +4,12 @@ import SnapKit
 final class CompareView: UIView {
 
     // MARK: - Properties
-    
-    // MARK: UICollectionView
     let selectedPokemonsCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 0, right: 10)
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(CompareCell.self, forCellWithReuseIdentifier: CompareCell.id)
         collectionView.showsVerticalScrollIndicator = false
-        
         return collectionView
     }()
 
@@ -23,7 +20,7 @@ final class CompareView: UIView {
         setupUI()
         makeConstraints()
         // DEBUG:
-        debug()
+//        debug()
     }
     
     required init?(coder: NSCoder) {

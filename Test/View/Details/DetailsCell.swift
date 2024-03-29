@@ -3,6 +3,26 @@ import SnapKit
 
 final class DetailsCell: UICollectionViewCell {
     
+    // MARK: - Enums
+    enum CellConfigurationMode {
+        case details(statTitle: String, value: Int)
+        case compare(statTitle: String, value: Int, selectedPokemonID: Int, statID: Int)
+    }
+    
+    private enum Constants {
+        static let statTitleFontSizeDetails: CGFloat = 18
+        static let valueLabelFontSizeDetails: CGFloat = 18
+        static let statTitleFontSizeCompare: CGFloat = 14
+        static let valueLabelFontSizeCompare: CGFloat = 16
+        static let valueLabelFontSizeArrowShown: CGFloat = 20
+        static let bgColor = UIColor.systemYellow
+        static let compareArrowColor = UIColor.green
+        static let compareArrowSystemName = "arrow.up"
+        static let borderColor = UIColor.black.cgColor
+        static let borderWidth: CGFloat = 2
+        static let cornerRadius: CGFloat = 15
+    }
+    
     // MARK: - Properties
     static let id = "details"
     
@@ -10,15 +30,20 @@ final class DetailsCell: UICollectionViewCell {
     private let statTitle: UILabel = {
         let label = UILabel()
         label.textColor = .black
-        label.font = .boldSystemFont(ofSize: 18)
         return label
     }()
     
     private let valueLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
-        label.font = .systemFont(ofSize: 18, weight: .semibold)
         return label
+    }()
+    
+    private let compareArrow: UIImageView = {
+        let iv = UIImageView(image: UIImage())
+        iv.contentMode = .scaleAspectFit
+        iv.clipsToBounds = true
+        return iv
     }()
     
     // MARK: - Life Cycle
@@ -27,6 +52,7 @@ final class DetailsCell: UICollectionViewCell {
         
         setupUI()
         makeConstraints()
+        debug()
     }
     
     required init?(coder: NSCoder) {
@@ -34,64 +60,91 @@ final class DetailsCell: UICollectionViewCell {
     }
     
     private func setupUI() {
-        contentView.backgroundColor = .systemYellow
-        contentView.layer.borderColor = UIColor.black.cgColor
-        contentView.layer.borderWidth = 2
-        contentView.layer.cornerRadius = 15
-        contentView.addSubviews(statTitle, valueLabel)
+        contentView.backgroundColor = Constants.bgColor
+        contentView.layer.borderColor = Constants.borderColor
+        contentView.layer.borderWidth = Constants.borderWidth
+        contentView.layer.cornerRadius = Constants.cornerRadius
+        contentView.addSubviews(statTitle, valueLabel, compareArrow)
     }
     
-    func configureData(statTitle: String, value: Int) {
-        self.statTitle.text = statTitle
-        valueLabel.text = "\(value)"
+    // DEBUG:
+    private func debug() {
+//        compareArrow.backgroundColor = .white
     }
     
-    func configureForCompare(statTitle: String, value: Int, selectedPokemonID: Int, statID: Int) {
-        valueLabel.font = .systemFont(ofSize: 18, weight: .semibold)
-        
-        let attributeWinnerArray = ComparePokemonsManager.shared.selectedPokemonsAttributesWinner
-        contentView.backgroundColor = .clear
-        contentView.layer.borderWidth = 0
-        if selectedPokemonID % 2 == 0 {
-            self.statTitle.isHidden = false
-            if let attributeWinner = attributeWinnerArray.indices.contains(statID) ? attributeWinnerArray[statID] : nil {
-                if attributeWinner == .left {
-                    self.valueLabel.font = .systemFont(ofSize: 22, weight: .semibold)
-                }
-            }
-            self.removeConstraints()
-            self.makeConstraints()
-        } else {
-            self.statTitle.isHidden = true
-            if let attributeWinner = attributeWinnerArray.indices.contains(statID) ? attributeWinnerArray[statID] : nil {
-                if attributeWinner == .right {
-                    self.valueLabel.font = .systemFont(ofSize: 22, weight: .semibold)
-                }
-            }
-            self.valueLabel.snp.removeConstraints()
-            self.valueLabel.snp.makeConstraints { make in
-                make.centerY.equalTo(self.snp.centerY)
-                make.leading.equalToSuperview().offset(20)
-            }
+    func configureCell(with mode: CellConfigurationMode) {
+        switch mode {
+        case .details(let statTitle, let value):
+            configureUIComponents(for: .details(statTitle: statTitle, value: value))
+        case .compare(let statTitle, let value, let selectedPokemonID, let statID):
+            configureUIComponents(for: .compare(statTitle: statTitle, value: value, selectedPokemonID: selectedPokemonID, statID: statID))
+            configureForCompare(statTitle: statTitle, value: value, selectedPokemonID: selectedPokemonID, statID: statID)
         }
-        self.statTitle.text = statTitle
-        valueLabel.text = "\(value)"
+    }
+
+    private func configureUIComponents(for mode: CellConfigurationMode) {
+        switch mode {
+        case .details(let statTitle, let value):
+            compareArrow.isHidden = true
+            self.statTitle.font = .boldSystemFont(ofSize: Constants.statTitleFontSizeDetails)
+            self.statTitle.text = statTitle
+            valueLabel.font = .systemFont(ofSize: Constants.valueLabelFontSizeDetails, weight: .semibold)
+            valueLabel.text = "\(value)"
+        case .compare(let statTitle, let value, _, _):
+            compareArrow.isHidden = true
+            contentView.backgroundColor = .clear
+            contentView.layer.borderWidth = 0
+            self.statTitle.font = .boldSystemFont(ofSize: Constants.statTitleFontSizeCompare)
+            self.statTitle.text = statTitle
+            valueLabel.font = .systemFont(ofSize: Constants.valueLabelFontSizeCompare, weight: .semibold)
+            valueLabel.text = "\(value)"
+        }
+    }
+    
+    private func configureForCompare(statTitle: String, value: Int, selectedPokemonID: Int, statID: Int) {
+        guard let attributeWinner = ComparePokemonsManager.shared.selectedPokemonsAttributesWinner.indices.contains(statID) ? ComparePokemonsManager.shared.selectedPokemonsAttributesWinner[statID] : nil else { return }
+        if shouldHighlightAttributeWinner(selectedPokemonID: selectedPokemonID, attributeWinner: attributeWinner) {
+            highlightWinningStat()
+        }
+    }
+
+    private func shouldHighlightAttributeWinner(selectedPokemonID: Int, attributeWinner: AttributeWinner) -> Bool {
+        selectedPokemonID % 2 == 0 ? attributeWinner == .left : attributeWinner == .right
+    }
+
+    private func highlightWinningStat() {
+        valueLabel.font = .systemFont(ofSize: Constants.valueLabelFontSizeArrowShown, weight: .semibold)
+        configureArrow()
+    }
+
+    private func configureArrow() {
+        compareArrow.isHidden = false
+        if let symbolImage = UIImage(systemName: Constants.compareArrowSystemName),
+            let boldSymbolImage = applyBoldConfiguration(to: symbolImage) {
+            compareArrow.image = boldSymbolImage
+        }
+        compareArrow.tintColor = Constants.compareArrowColor
+    }
+
+    private func applyBoldConfiguration(to image: UIImage) -> UIImage? {
+        let config = UIImage.SymbolConfiguration(weight: .bold)
+        return image.withConfiguration(config)
     }
     
     // MARK: - Constraints
     private func makeConstraints() {
         statTitle.snp.makeConstraints { make in
             make.centerY.equalTo(self.snp.centerY)
-            make.leading.equalToSuperview().offset(20)
+            make.leading.equalToSuperview().offset(5)
         }
         valueLabel.snp.makeConstraints { make in
-            make.trailing.equalToSuperview().offset(-20)
+            make.trailing.equalTo(compareArrow.snp.leading).offset(-4)
             make.centerY.equalTo(self.snp.centerY)
         }
-    }
-    
-    private func removeConstraints() {
-        statTitle.snp.removeConstraints()
-        valueLabel.snp.removeConstraints()
+        compareArrow.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().offset(-3)
+            make.centerY.equalTo(self.snp.centerY)
+            make.width.equalToSuperview().multipliedBy(0.11)
+        }
     }
 }

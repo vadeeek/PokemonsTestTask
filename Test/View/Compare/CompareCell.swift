@@ -10,7 +10,7 @@ final class CompareCell: UICollectionViewCell {
     private var currentPokemon: EnhancedPokemon?
     private var selectedPokemonID: Int?
     private var pokemonTypes: [String] = []
-    private let statsTitles = ["❤️ HP:", "⚔️ A:", "🛡️ D:", "🔥 SA:", "🔮 SD:", "💨 S:"]
+    private let statsTitles = ["❤️ Health:", "⚔️ Attack (A):", "🛡️ Defense (D):", "🔥 Special (A):", "🔮 Special (D):", "💨 Speed:"]
     
     // MARK: UILabel
     private let nameLabel: UILabel = {
@@ -48,6 +48,7 @@ final class CompareCell: UICollectionViewCell {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(PokemonTypeCell.self, forCellWithReuseIdentifier: PokemonTypeCell.id)
         collectionView.showsHorizontalScrollIndicator = false
+        collectionView.backgroundColor = .clear
         return collectionView
     }()
     
@@ -55,6 +56,7 @@ final class CompareCell: UICollectionViewCell {
         let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
         collectionView.register(DetailsCell.self, forCellWithReuseIdentifier: DetailsCell.id)
         collectionView.showsVerticalScrollIndicator = false
+        collectionView.backgroundColor = .clear
         return collectionView
     }()
     
@@ -94,9 +96,10 @@ final class CompareCell: UICollectionViewCell {
     // DEBUG:
     private func debug() {
         contentView.backgroundColor = .white
-        nameLabel.backgroundColor = .systemPink
-        pokemonTypesCollectionView.backgroundColor = .green
-        characteristicsCollectionView.backgroundColor = .systemGray
+        contentView.layer.cornerRadius = 15
+//        nameLabel.backgroundColor = .systemPink
+//        pokemonTypesCollectionView.backgroundColor = .green
+//        characteristicsCollectionView.backgroundColor = .systemGray
     }
     
     func configureData(with pokemon: EnhancedPokemon, id: Int) {
@@ -164,7 +167,8 @@ final class CompareCell: UICollectionViewCell {
         }
         characteristicsCollectionView.snp.makeConstraints { make in
             make.top.equalTo(pokemonTypesCollectionView.snp.bottom).offset(20)
-            make.height.equalToSuperview().multipliedBy(0.25)
+//            make.height.equalToSuperview().multipliedBy(0.42)
+            make.bottom.equalToSuperview()
             make.leading.trailing.equalToSuperview()
         }
     }
@@ -194,7 +198,7 @@ extension CompareCell: UICollectionViewDataSource {
             
             guard let stat = currentPokemon?.stats?[indexPath.row].baseStat else { return cell }
             if let id = self.selectedPokemonID {
-                cell.configureForCompare(statTitle: statsTitles[indexPath.row], value: stat, selectedPokemonID: id, statID: indexPath.row)
+                cell.configureCell(with: .compare(statTitle: statsTitles[indexPath.row], value: stat, selectedPokemonID: id, statID: indexPath.row))
             }
             return cell
         } else {
