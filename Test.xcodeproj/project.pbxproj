@@ -51,7 +51,7 @@
 		4FC09C0E2B7BF700002656B8 /* LaunchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FC09C0D2B7BF700002656B8 /* LaunchView.swift */; };
 		4FC09C112B7BF773002656B8 /* LaunchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FC09C102B7BF773002656B8 /* LaunchVC.swift */; };
 		4FC09C132B7BFB7A002656B8 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4FC09C122B7BFB7A002656B8 /* Launch Screen.storyboard */; };
-		4FCCB9E42B84C91C008B96CB /* SelectedPokemonManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FCCB9E32B84C91C008B96CB /* SelectedPokemonManager.swift */; };
+		4FCCB9E42B84C91C008B96CB /* ComparePokemonsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FCCB9E32B84C91C008B96CB /* ComparePokemonsManager.swift */; };
 		4FCCB9E72B84CA9F008B96CB /* CompareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FCCB9E62B84CA9F008B96CB /* CompareView.swift */; };
 		4FCCB9E92B84CB56008B96CB /* CompareCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FCCB9E82B84CB55008B96CB /* CompareCell.swift */; };
 		4FE903542B7E861800B98FA8 /* PokemonTypeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE903532B7E861800B98FA8 /* PokemonTypeCell.swift */; };
@@ -99,7 +99,7 @@
 		4FC09C0D2B7BF700002656B8 /* LaunchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchView.swift; sourceTree = "<group>"; };
 		4FC09C102B7BF773002656B8 /* LaunchVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchVC.swift; sourceTree = "<group>"; };
 		4FC09C122B7BFB7A002656B8 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
-		4FCCB9E32B84C91C008B96CB /* SelectedPokemonManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedPokemonManager.swift; sourceTree = "<group>"; };
+		4FCCB9E32B84C91C008B96CB /* ComparePokemonsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComparePokemonsManager.swift; sourceTree = "<group>"; };
 		4FCCB9E62B84CA9F008B96CB /* CompareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareView.swift; sourceTree = "<group>"; };
 		4FCCB9E82B84CB55008B96CB /* CompareCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareCell.swift; sourceTree = "<group>"; };
 		4FE903532B7E861800B98FA8 /* PokemonTypeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonTypeCell.swift; sourceTree = "<group>"; };
@@ -153,7 +153,6 @@
 		4F553CCB2A1A64C5004BBCF0 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				4FCCB9E22B84C8F3008B96CB /* SelectedPokemonManager */,
 				4F8255D82B82C93A005C363C /* APIModels */,
 				4F8255BF2B8190EB005C363C /* TypesFormatter */,
 				4F553CE52A1E382D004BBCF0 /* Managers */,
@@ -217,6 +216,7 @@
 			children = (
 				4F553CD92A1A965D004BBCF0 /* APIManager.swift */,
 				4F8C24112B93ED5000DD6176 /* FirebaseManager.swift */,
+				4FCCB9E32B84C91C008B96CB /* ComparePokemonsManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -305,14 +305,6 @@
 				4FC09C122B7BFB7A002656B8 /* Launch Screen.storyboard */,
 			);
 			path = Launch;
-			sourceTree = "<group>";
-		};
-		4FCCB9E22B84C8F3008B96CB /* SelectedPokemonManager */ = {
-			isa = PBXGroup;
-			children = (
-				4FCCB9E32B84C91C008B96CB /* SelectedPokemonManager.swift */,
-			);
-			path = SelectedPokemonManager;
 			sourceTree = "<group>";
 		};
 		4FCCB9E52B84CA47008B96CB /* Compare */ = {
@@ -429,7 +421,7 @@
 				4F8A96F72B8B792400A0B6B5 /* PokemonTypesList.swift in Sources */,
 				4F8C24152B93F2DB00DD6176 /* FavoritesView.swift in Sources */,
 				4F553CDA2A1A965D004BBCF0 /* APIManager.swift in Sources */,
-				4FCCB9E42B84C91C008B96CB /* SelectedPokemonManager.swift in Sources */,
+				4FCCB9E42B84C91C008B96CB /* ComparePokemonsManager.swift in Sources */,
 				4F92A39E2B8808AD0039C58A /* ProfileVC.swift in Sources */,
 				4F98D4AD2B7D676F00BA469E /* EvolutionChain.swift in Sources */,
 				4F8A96F92B8B794700A0B6B5 /* Species.swift in Sources */,
