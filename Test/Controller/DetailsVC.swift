@@ -149,7 +149,7 @@ extension DetailsVC: UICollectionViewDataSource {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DetailsCell.id, for: indexPath) as? DetailsCell else { fatalError("Unsupported cell") }
             
             guard let stat = currentPokemon.stats?[indexPath.row].baseStat else { return cell }
-            cell.configureData(statTitle: statsTitles[indexPath.row], value: stat)
+            cell.configureCell(with: .details(statTitle: statsTitles[indexPath.row], value: stat))
             return cell
         } else {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EvolutionCell.id, for: indexPath) as? EvolutionCell else { fatalError("Unsupported cell") }
