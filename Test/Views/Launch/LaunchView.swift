@@ -4,14 +4,11 @@ import SnapKit
 final class LaunchView: UIView {
     
     // MARK: - Properties
-    
-    // MARK: UIImageView
     private let pokemonLabelPicture: UIImageView = {
         let image = Resources.Images.LaunchScreen.pokemonLabel
         let imageView = UIImageView(image: image)
         imageView.contentMode = .scaleAspectFit
         imageView.alpha = 0.0
-        
         return imageView
     }()
     
@@ -20,7 +17,6 @@ final class LaunchView: UIView {
         let imageView = UIImageView(image: image)
         imageView.contentMode = .scaleAspectFit
         imageView.alpha = 0.0
-        
         return imageView
     }()
     
@@ -43,6 +39,7 @@ final class LaunchView: UIView {
         addSubviews(pokemonLabelPicture, pokeballImage)
     }
     
+    // MARK: - Methods
     private func startAnimations() {
         UIView.animate(withDuration: 0.5, delay: 0.0, options: [.autoreverse, .repeat], animations: {
             self.pokemonLabelPicture.alpha = 1.0

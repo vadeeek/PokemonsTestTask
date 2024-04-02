@@ -38,7 +38,7 @@ struct Sprites: Decodable {
     enum CodingKeys: String, CodingKey {
         case frontDefault = "front_default"
     }
-    
+    // FIXME: - убрать этот код
     //    init(frontDefault: String?) {
     //        self.frontDefault = frontDefault
     //    }

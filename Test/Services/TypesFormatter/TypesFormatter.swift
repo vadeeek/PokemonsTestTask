@@ -2,8 +2,10 @@ import UIKit
 
 final class TypeFormatter {
     
+    // MARK: - Properties
     static let shared = TypeFormatter()
     
+    // MARK: - Methods
     func formate(typeString: String) -> (String, UIColor) {
         let typesStrings: [String] = ["normal", "fighting", "flying", "poison", "ground", "rock", "bug", "ghost", "steel", "fire", "water", "grass", "electric", "psychic", "ice", "dragon", "dark", "fairy", "unknown", "shadow"]
         let typesColors: [UIColor] = [.lightGray, .orange, .systemBlue, .systemPink, .systemBrown, .systemGray3, .systemGreen, .purple, .lightGray, .orange, .systemBlue, .green, .yellow, .white, .white, .black, .darkGray, .systemPink, .lightGray, .systemGray4]

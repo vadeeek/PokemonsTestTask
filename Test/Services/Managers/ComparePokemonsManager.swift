@@ -6,6 +6,7 @@ enum AttributeWinner {
 
 final class ComparePokemonsManager {
     
+    // MARK: - Properties
     static let shared = ComparePokemonsManager ()
     
     private(set) var selectedPokemons: [EnhancedPokemon] = [] {
@@ -15,6 +16,7 @@ final class ComparePokemonsManager {
     }
     private(set) var selectedPokemonsAttributesWinner: [AttributeWinner] = []
     
+    // MARK: - Methods
     func addPokemon(_ pokemon: EnhancedPokemon) {
         if !selectedPokemons.contains(pokemon) {
             if selectedPokemons.count == 2 {

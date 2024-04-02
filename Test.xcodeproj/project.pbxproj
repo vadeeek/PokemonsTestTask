@@ -142,27 +142,27 @@
 			children = (
 				4F8C24062B910A1000DD6176 /* Protocols */,
 				4F8255CD2B826456005C363C /* Helpers */,
-				4F553CCB2A1A64C5004BBCF0 /* Model */,
-				4F553CCC2A1A64C8004BBCF0 /* View */,
+				4F553CCB2A1A64C5004BBCF0 /* Services */,
+				4F553CCC2A1A64C8004BBCF0 /* Views */,
 				4F553CCD2A1A64CF004BBCF0 /* Controller */,
+				4FC2A60F2BBB7652007CBFCC /* ViewModels */,
 				4F553CE62A1E41A9004BBCF0 /* SupportingFiles */,
 			);
 			path = Test;
 			sourceTree = "<group>";
 		};
-		4F553CCB2A1A64C5004BBCF0 /* Model */ = {
+		4F553CCB2A1A64C5004BBCF0 /* Services */ = {
 			isa = PBXGroup;
 			children = (
 				4F8255D82B82C93A005C363C /* APIModels */,
+				4FC2A6102BBB78E8007CBFCC /* Models */,
 				4F8255BF2B8190EB005C363C /* TypesFormatter */,
 				4F553CE52A1E382D004BBCF0 /* Managers */,
-				4F8255D32B82AEB6005C363C /* EnhancedPokemon.swift */,
-				4F8255D02B826EBB005C363C /* EvolutionCellModel.swift */,
 			);
-			path = Model;
+			path = Services;
 			sourceTree = "<group>";
 		};
-		4F553CCC2A1A64C8004BBCF0 /* View */ = {
+		4F553CCC2A1A64C8004BBCF0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				4FC09C0C2B7BF6EC002656B8 /* Launch */,
@@ -172,7 +172,7 @@
 				4F8A97052B8CE31500A0B6B5 /* Profile */,
 				4F8C24132B93F14C00DD6176 /* Favorites */,
 			);
-			path = View;
+			path = Views;
 			sourceTree = "<group>";
 		};
 		4F553CCD2A1A64CF004BBCF0 /* Controller */ = {
@@ -305,6 +305,22 @@
 				4FC09C122B7BFB7A002656B8 /* Launch Screen.storyboard */,
 			);
 			path = Launch;
+			sourceTree = "<group>";
+		};
+		4FC2A60F2BBB7652007CBFCC /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		4FC2A6102BBB78E8007CBFCC /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				4F8255D32B82AEB6005C363C /* EnhancedPokemon.swift */,
+				4F8255D02B826EBB005C363C /* EvolutionCellModel.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		4FCCB9E52B84CA47008B96CB /* Compare */ = {

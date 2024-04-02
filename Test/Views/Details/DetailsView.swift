@@ -6,23 +6,19 @@ final class DetailsView: UIView {
     // MARK: - Properties
     weak var delegate: DetailsViewDelegate?
     
-    // MARK: UIImageView
     private let pokemonPicture: UIImageView = {
         let image = Resources.Images.Pokemon.pokemonPictureNoImage
         let imageView = UIImageView(image: image)
         imageView.layer.masksToBounds = true
         imageView.layer.cornerRadius = 10
-        
         return imageView
     }()
     
-    // MARK: UILabel
     private let idLabel: UILabel = {
         let label = UILabel()
         label.text = "ID: "
         label.textColor = .black
         label.font = .boldSystemFont(ofSize: 18)
-        
         return label
     }()
     
@@ -30,16 +26,13 @@ final class DetailsView: UIView {
         let label = UILabel()
         label.textColor = .black
         label.font = .boldSystemFont(ofSize: 18)
-        
         return label
     }()
     
-    // MARK: UICollectionView
     let detailsCollectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
         collectionView.register(DetailsCell.self, forCellWithReuseIdentifier: DetailsCell.id)
         collectionView.showsVerticalScrollIndicator = false
-        
         return collectionView
     }()
     
@@ -54,32 +47,25 @@ final class DetailsView: UIView {
         collectionView.layer.maskedCorners = [.layerMinXMaxYCorner]
         collectionView.backgroundColor = UIColor(patternImage: (Resources.Images.DetailsScreen.evolutionBG)!)
         collectionView.alpha = 0.85
-        
         return collectionView
     }()
     
-    // MARK: UIScrollView
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.showsVerticalScrollIndicator = false
-        
         return scrollView
     }()
     
-    // MARK: UIView
     private let containerView: UIView = {
         let view = UIView()
-        
         return view
     }()
     
-    // MARK: UIButton
     private lazy var starButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "star"), for: .normal)
         button.tintColor = .yellow
         button.addTarget(self, action: #selector(starButtonPressed(_:)), for: .touchUpInside)
-        
         return button
     }()
     
@@ -97,6 +83,7 @@ final class DetailsView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Methods
     private func setupUI() {
         backgroundColor = .systemGray
         addSubviews(scrollView)
@@ -114,7 +101,7 @@ final class DetailsView: UIView {
     }
     
     func configureData(with pokemon: EnhancedPokemon) {
-        if let id = pokemon.id, let height = pokemon.height {
+        if let id = pokemon.id, let height = pokemon.height { // FIXME: зачем здесь вторая проверка в условии??
             idLabel.text = "ID: \(id)"
         } else {
             idLabel.text = "ID: ?"

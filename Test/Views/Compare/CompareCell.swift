@@ -12,7 +12,6 @@ final class CompareCell: UICollectionViewCell {
     private var pokemonTypes: [String] = []
     private let statsTitles = ["❤️ Health:", "⚔️ Attack (A):", "🛡️ Defense (D):", "🔥 Special (A):", "🔮 Special (D):", "💨 Speed:"]
     
-    // MARK: UILabel
     private let nameLabel: UILabel = {
         let label = UILabel()
         label.lineBreakMode = .byTruncatingTail
@@ -28,7 +27,6 @@ final class CompareCell: UICollectionViewCell {
         return label
     }()
     
-    // MARK: UIImageView
     private let pokemonPicture: UIImageView = {
         let image = Resources.Images.Pokemon.pokemonPictureNoImage
         let imageView = UIImageView(image: image)
@@ -40,7 +38,6 @@ final class CompareCell: UICollectionViewCell {
         return imageView
     }()
     
-    // MARK: UICollectionView
     let pokemonTypesCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -60,7 +57,6 @@ final class CompareCell: UICollectionViewCell {
         return collectionView
     }()
     
-    // MARK: UIView
     private let shortInfoFrame: UIView = {
         let view = UIView()
         view.backgroundColor = .systemOrange
@@ -88,6 +84,7 @@ final class CompareCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Methods
     private func setupUI() {
         //        contentView.layer.cornerRadius = 15
         contentView.addSubviews(pokemonPicture, idLabel, shortInfoFrame, nameLabel,  pokemonTypesCollectionView, characteristicsCollectionView)

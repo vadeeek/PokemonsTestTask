@@ -12,25 +12,21 @@ final class UnauthorizedProfileView: UIView {
     
     private var authenticationMode: AuthenticationMode = .authorization
     
-    // MARK: UILabel
     let noAccountLabel: UILabel = {
         let label = UILabel()
         label.text = "Don't have an account?"
         label.textColor = .systemGray
         label.textAlignment = .center
         label.font = .boldSystemFont(ofSize: 11)
-        
         return label
     }()
     
-    // MARK: UIButton
     lazy var changeAuthModeButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Sign up", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.titleLabel?.font = .boldSystemFont(ofSize: 13)
         button.addTarget(self, action: #selector(changeAuthModeButtonPressed(_:)), for: .touchUpInside)
-        
         return button
     }()
     
@@ -42,11 +38,9 @@ final class UnauthorizedProfileView: UIView {
         button.layer.cornerRadius = 10
         button.titleLabel?.font = .boldSystemFont(ofSize: 16)
         button.addTarget(self, action: #selector(logIn(_:)), for: .touchUpInside)
-        
         return button
     }()
     
-    // MARK: UITextField
     let loginTextField: UITextField = {
         let tf = UITextField()
         tf.borderStyle = .roundedRect
@@ -56,7 +50,6 @@ final class UnauthorizedProfileView: UIView {
         tf.autocapitalizationType = .none
         tf.spellCheckingType = .no
         tf.placeholder = "myname@example.com"
-        
         return tf
     }()
     
@@ -70,7 +63,6 @@ final class UnauthorizedProfileView: UIView {
         tf.spellCheckingType = .no
         tf.placeholder = ""
         tf.isSecureTextEntry = true
-        
         return tf
     }()
     
@@ -85,25 +77,20 @@ final class UnauthorizedProfileView: UIView {
         tf.placeholder = ""
         tf.isSecureTextEntry = true
         tf.isHidden = true
-        
         return tf
     }()
     
-    // MARK: UILabel
     let rememberMeLabel: UILabel = {
         let label = UILabel()
         label.text = "Remember me"
         label.textColor = .systemGray
         label.textAlignment = .center
         label.font = .boldSystemFont(ofSize: 11)
-        
         return label
     }()
     
-    // MARK: UISwitch
     let rememberMeSwitch: UISwitch = {
         let tumbler = UISwitch()
-        
         return tumbler
     }()
     
@@ -121,6 +108,7 @@ final class UnauthorizedProfileView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Methods
     private func setupUI() {
         backgroundColor = .white
         addSubviews(loginTextField, passwordTextField, confirmPasswordTextField, rememberMeLabel, rememberMeSwitch, authenticationButton, noAccountLabel, changeAuthModeButton)

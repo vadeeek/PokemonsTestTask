@@ -5,7 +5,6 @@ final class AuthorizedProfileView: UIView {
     // MARK: - Properties
     weak var delegate: AuthorizedProfileViewDelegate?
     
-    // MARK: UILabel
     let changeLanguageLabel: UILabel = {
         let label = UILabel()
         label.text = "Смена языка"
@@ -14,11 +13,9 @@ final class AuthorizedProfileView: UIView {
         label.textColor = .white
         label.textAlignment = .center
         label.font = .boldSystemFont(ofSize: 16)
-        
         return label
     }()
     
-    // MARK: UIButton
     private lazy var ruLanguageButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("🇷🇺\n✅", for: .normal)
@@ -27,7 +24,6 @@ final class AuthorizedProfileView: UIView {
         button.titleLabel?.textAlignment = .center
         button.titleLabel?.font = .boldSystemFont(ofSize: 58)
 //        button.addTarget(self, action: #selector(signOutButtonPressed(_:)), for: .touchUpInside)
-        
         return button
     }()
     
@@ -39,7 +35,6 @@ final class AuthorizedProfileView: UIView {
         button.titleLabel?.textAlignment = .center
         button.titleLabel?.font = .boldSystemFont(ofSize: 58)
 //        button.addTarget(self, action: #selector(signOutButtonPressed(_:)), for: .touchUpInside)
-        
         return button
     }()
     
@@ -51,7 +46,6 @@ final class AuthorizedProfileView: UIView {
         button.layer.cornerRadius = 10
         button.titleLabel?.font = .boldSystemFont(ofSize: 16)
         button.addTarget(self, action: #selector(signOutButtonPressed(_:)), for: .touchUpInside)
-        
         return button
     }()
     
@@ -62,20 +56,16 @@ final class AuthorizedProfileView: UIView {
         button.setTitle("Favorites", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.addTarget(self, action: #selector(favoritesButtonPressed(_:)), for: .touchUpInside)
-        
         return button
     }()
     
-    // MARK: UIView
     private let languageFrame: UIView = {
         let view = UIView()
         view.backgroundColor = .systemGray
         view.layer.cornerRadius = 10
-        
         return view
     }()
     
-    // MARK: UITextField
     let passwordTextField: UITextField = {
         let tf = UITextField()
         tf.borderStyle = .roundedRect
@@ -86,17 +76,15 @@ final class AuthorizedProfileView: UIView {
         tf.spellCheckingType = .no
         tf.placeholder = ""
         tf.isSecureTextEntry = true
-        
         return tf
     }()
-    // MARK: UILabel
+    
     let rememberMeLabel: UILabel = {
         let label = UILabel()
         label.text = "Remember me"
         label.textColor = .systemGray
         label.textAlignment = .center
         label.font = .boldSystemFont(ofSize: 11)
-        
         return label
     }()
     
@@ -114,6 +102,7 @@ final class AuthorizedProfileView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Methods
     private func setupUI() {
         backgroundColor = .systemGreen
         addSubviews(languageFrame, ruLanguageButton, enLanguageButton, favoritesButton, signOutButton)

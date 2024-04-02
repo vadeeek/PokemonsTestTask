@@ -9,6 +9,7 @@ final class DetailsCell: UICollectionViewCell {
         case compare(statTitle: String, value: Int, selectedPokemonID: Int, statID: Int)
     }
     
+    // MARK: - Constants
     private enum Constants {
         static let statTitleFontSizeDetails: CGFloat = 18
         static let valueLabelFontSizeDetails: CGFloat = 18
@@ -26,7 +27,6 @@ final class DetailsCell: UICollectionViewCell {
     // MARK: - Properties
     static let id = "details"
     
-    // MARK: UILabel
     private let statTitle: UILabel = {
         let label = UILabel()
         label.textColor = .black
@@ -59,6 +59,7 @@ final class DetailsCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Methods
     private func setupUI() {
         contentView.backgroundColor = Constants.bgColor
         contentView.layer.borderColor = Constants.borderColor
