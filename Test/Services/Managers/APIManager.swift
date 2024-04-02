@@ -6,7 +6,23 @@ enum NetworkError: Error {
     case decodingError
 }
 
-final class APIManager {
+protocol APIManagerProtocol {
+    var allPokemonNames: [String] { get }
+    var allPokemonIDs: [Int] { get }
+    var allPokemonTypes: [String] { get }
+    
+    func fetchAllPokemonNames()
+    func fetchAllPokemonIDs()
+    func fetchAllPokemonTypes(completion: @escaping (Result<[String], Error>) -> Void)
+    func searchPokemons(byKeywordOrId keywordOrId: String, completion: @escaping (Result<[EnhancedPokemon], Error>) -> Void)
+    func getPokemon(byID id: Int, completion: @escaping (EnhancedPokemon) -> Void)
+    func getPokemons(byPokemonType pokemonType: String, completion: @escaping ([EnhancedPokemon]) -> Void)
+    func getNextPagePokemonsList(isFirstPage: Bool, completion: @escaping (Result<[EnhancedPokemon], Error>) -> Void)
+    func getPokemonsForEvolution(fromPokemonIDsArray pokemonIDsArray: [Int], completion: @escaping ([EnhancedPokemon], [Int]) -> Void)
+    func getEvolutionChainArray(byUrlString urlString: String, completion: @escaping ([String]) -> Void)
+}
+
+final class APIManager: APIManagerProtocol {
     
     // MARK: - Properties
     static let shared = APIManager()
