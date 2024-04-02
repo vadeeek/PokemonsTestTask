@@ -25,6 +25,7 @@ final class CompareVC: UIViewController {
         prepareSelectedPokemonsData()
     }
     
+    // MARK: - Methods
     private func addClearButton() {
         let rightButton = UIBarButtonItem(image: nil, style: .plain, target: self, action: #selector(clearButtonTapped(_:)))
         rightButton.title = "Clear"
@@ -88,7 +89,6 @@ extension CompareVC: UICollectionViewDataSource {
         return cell
     }
 }
-
 // MARK: - UICollectionViewDelegateFlowLayout
 extension CompareVC: UICollectionViewDelegateFlowLayout {
     

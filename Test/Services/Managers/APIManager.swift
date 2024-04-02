@@ -8,6 +8,7 @@ enum NetworkError: Error {
 
 final class APIManager {
     
+    // MARK: - Properties
     static let shared = APIManager()
     
 //    private let paginationLimit = 20
@@ -20,6 +21,7 @@ final class APIManager {
     var allPokemonIDs: [Int] = []
     var allPokemonTypes: [String] = []
 
+    // MARK: - Methods
     func fetchAllPokemonNames() {
         if let url = URL(string: "https://pokeapi.co/api/v2/pokemon/?limit=1350") {
             URLSession.shared.dataTask(with: url) { data, _, error in

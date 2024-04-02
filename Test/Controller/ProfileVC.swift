@@ -25,6 +25,7 @@ final class ProfileVC: UIViewController {
         }
     }
     
+    // MARK: - Methods
     private func setupNavigationControllerAppearance() {
         title = "Профиль"
         navigationItem.backButtonTitle = ""
@@ -43,7 +44,7 @@ final class ProfileVC: UIViewController {
 }
 
 // MARK: - Extensions
-// MARK: UnauthorizedProfileViewDelegate
+// MARK: - UnauthorizedProfileViewDelegate
 extension ProfileVC: UnauthorizedProfileViewDelegate {
     
     func createUser(withEmail email: String, andPassword password: String) {
@@ -88,7 +89,7 @@ extension ProfileVC: UnauthorizedProfileViewDelegate {
     }
 }
 
-// MARK: AuthorizedProfileViewDelegate
+// MARK: - AuthorizedProfileViewDelegate
 extension ProfileVC: AuthorizedProfileViewDelegate {
     
     func signOut() {

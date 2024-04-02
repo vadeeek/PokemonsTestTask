@@ -5,12 +5,10 @@ final class PokemonsAllTypesCell: UICollectionViewCell {
     // MARK: - Properties
     static let id = "pokemonsAllTypes"
     
-    // MARK: UILabel
     private let typeLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
         label.font = .boldSystemFont(ofSize: 14)
-        
         return label
     }()
     
@@ -26,6 +24,7 @@ final class PokemonsAllTypesCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Methods
     private func setupUI() {
         contentView.alpha = 0.5
         contentView.layer.cornerRadius = 10

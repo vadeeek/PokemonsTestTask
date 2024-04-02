@@ -9,6 +9,7 @@ enum Tabs: Int {
 
 final class TabBarController: UITabBarController {
     
+    // MARK: - Life Cycle
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         
@@ -63,6 +64,7 @@ final class TabBarController: UITabBarController {
     //        ], animated: true)
     //    }
     
+    // MARK: - Methods
     private func configure() {
         tabBar.tintColor = Resources.Colors.active
         tabBar.barTintColor = .black

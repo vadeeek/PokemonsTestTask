@@ -4,8 +4,6 @@ import SnapKit
 final class PokemonsView: UIView {
     
     // MARK: - Properties
-    
-    // MARK: UICollectionView
     let pokemonTypesCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -13,8 +11,7 @@ final class PokemonsView: UIView {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(PokemonsAllTypesCell.self, forCellWithReuseIdentifier: PokemonsAllTypesCell.id)
         collectionView.showsHorizontalScrollIndicator = false
-        collectionView.backgroundColor = .clear
-        
+        collectionView.backgroundColor = .clear // FIXME: возможно не нужно это указывать
         return collectionView
     }()
     
@@ -24,11 +21,9 @@ final class PokemonsView: UIView {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(PokemonsCell.self, forCellWithReuseIdentifier: PokemonsCell.id)
         collectionView.showsVerticalScrollIndicator = false
-        
         return collectionView
     }()
     
-    // MARK: UIActivityIndicatorView
     let spinner: UIActivityIndicatorView = {
         let spinner = UIActivityIndicatorView(style: .large)
         spinner.hidesWhenStopped = true
@@ -49,6 +44,7 @@ final class PokemonsView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Methods
     private func setupUI() {
         backgroundColor = .black
         addSubviews(spinner, pokemonsCollectionView, pokemonTypesCollectionView)

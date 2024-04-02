@@ -27,6 +27,7 @@ final class CompareView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Methods
     private func setupUI() {
         backgroundColor = .systemGray
         addSubviews(selectedPokemonsCollectionView)

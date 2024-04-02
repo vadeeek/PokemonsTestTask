@@ -9,13 +9,11 @@ final class PokemonsCell: UICollectionViewCell {
     
     private var pokemonTypes: [String] = []
     
-    // MARK: UILabel
     private let nameLabel: UILabel = {
         let label = UILabel()
         label.lineBreakMode = .byTruncatingTail
         label.textColor = .black
         label.font = .boldSystemFont(ofSize: 18)
-        
         return label
     }()
     
@@ -23,11 +21,9 @@ final class PokemonsCell: UICollectionViewCell {
         let label = UILabel()
         label.textColor = .black
         label.font = .boldSystemFont(ofSize: 16)
-        
         return label
     }()
     
-    // MARK: UIImageView
     private let pokemonPicture: UIImageView = {
         let image = Resources.Images.Pokemon.pokemonPictureNoImage
         let imageView = UIImageView(image: image)
@@ -36,11 +32,9 @@ final class PokemonsCell: UICollectionViewCell {
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 15
         imageView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        
         return imageView
     }()
     
-    // MARK: UICollectionView
     let pokemonTypesCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -49,17 +43,14 @@ final class PokemonsCell: UICollectionViewCell {
         collectionView.register(PokemonTypeCell.self, forCellWithReuseIdentifier: PokemonTypeCell.id)
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.backgroundColor = .clear
-        
         return collectionView
     }()
     
-    // MARK: UIView
     private let shortInfoFrame: UIView = {
         let view = UIView()
         view.backgroundColor = .systemOrange
         view.layer.cornerRadius = 15
         view.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner]
-        
         return view
     }()
     
@@ -80,6 +71,7 @@ final class PokemonsCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Methods
     private func setupUI() {
         contentView.backgroundColor = .white
         contentView.layer.cornerRadius = 15
@@ -122,12 +114,6 @@ final class PokemonsCell: UICollectionViewCell {
         pokemonTypes.removeAll()
     }
     
-    //    private func setUpPokemonPicture(with data: Data) {
-    //        pokemonPicture.contentMode = .scaleAspectFit
-    ////        pokemonPicture.clipsToBounds = false
-    //        pokemonPicture.image = UIImage(data: data)
-    //    }
-    
     // MARK: - Constraints
     private func makeConstraints() {
         pokemonPicture.snp.makeConstraints { make in
@@ -166,21 +152,9 @@ extension PokemonsCell: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokemonTypeCell.id, for: indexPath) as? PokemonTypeCell else { fatalError("Unsupported cell") }
-        let pokemonTypeName = pokemonTypes[indexPath.row]
-        cell.configure(with: pokemonTypeName)
+        cell.configure(with: pokemonTypes[indexPath.row])
         return cell
     }
-}
-
-// MARK: - UICollectionViewDelegate
-extension PokemonsCell: UICollectionViewDelegate {
-    
-    //    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    //
-    //        let viewController = DetailsVC(pokemon: pokemonsData[indexPath.row])
-    //        viewController.title = pokemonsData[indexPath.row].name?.uppercased()
-    //        navigationController?.pushViewController(viewController, animated: true)
-    //    }
 }
 // MARK: - UICollectionViewDelegateFlowLayout
 extension PokemonsCell: UICollectionViewDelegateFlowLayout {

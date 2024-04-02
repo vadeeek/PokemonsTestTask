@@ -5,12 +5,10 @@ final class EvolutionCell: UICollectionViewCell {
     // MARK: - Properties
     static let id = "evolution"
     
-    // MARK: UILabel
     private let nameLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
         label.font = .boldSystemFont(ofSize: 18)
-        
         return label
     }()
     
@@ -18,7 +16,6 @@ final class EvolutionCell: UICollectionViewCell {
         let label = UILabel()
         label.textColor = .black
         label.font = .systemFont(ofSize: 18, weight: .semibold)
-        
         return label
     }()
     
@@ -33,11 +30,9 @@ final class EvolutionCell: UICollectionViewCell {
         label.layer.masksToBounds = true
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 14, weight: .semibold)
-        
         return label
     }()
     
-    // MARK: UIImageView
     private let pokemonPicture: UIImageView = {
         let imageView = UIImageView(image:  UIImage(named: ""))
         imageView.layer.cornerRadius = 49
@@ -50,14 +45,12 @@ final class EvolutionCell: UICollectionViewCell {
         imageView.layer.shadowOffset = CGSize(width: 7, height: 5)
 //        contentView.layer.shadowRadius = CGSize(width: <#T##Double#>, height: <#T##Double#>)
         imageView.layer.shadowOpacity = 0.3
-        
         return imageView
     }()
     
     private let arrowImage: UIImageView = {
         let image = Resources.Images.DetailsScreen.evolutionArrow
         let imageView = UIImageView(image: image)
-        
         return imageView
     }()
     
@@ -75,6 +68,7 @@ final class EvolutionCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Methods
     private func setupUI() {
 //        contentView.backgroundColor = .magenta
         contentView.addSubviews(pokemonPicture, nameLabel, idLabel, arrowImage, currentLabel)
@@ -95,7 +89,6 @@ final class EvolutionCell: UICollectionViewCell {
         }
         arrowImage.isHidden = evolutionCellModel.isLastEvolutionInChain
         currentLabel.isHidden = !evolutionCellModel.isCurrentEvolutionOnScreen
-        
     }
     
     // MARK: - Constraints

@@ -31,6 +31,7 @@ final class FavoritesVC: UIViewController {
         setupNavigationControllerAppearance()
     }
 
+    // MARK: - Methods
     private func setupNavigationControllerAppearance() {
         title = "Favorites"
         navigationItem.backButtonTitle = ""

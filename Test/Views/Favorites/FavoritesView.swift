@@ -4,8 +4,6 @@ import SnapKit
 final class FavoritesView: UIView {
     
     // MARK: - Properties
-    
-    // MARK: UICollectionView
     let pokemonTypesCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -14,7 +12,6 @@ final class FavoritesView: UIView {
         collectionView.register(PokemonsAllTypesCell.self, forCellWithReuseIdentifier: PokemonsAllTypesCell.id)
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.backgroundColor = .clear
-        
         return collectionView
     }()
     
@@ -24,7 +21,6 @@ final class FavoritesView: UIView {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(PokemonsCell.self, forCellWithReuseIdentifier: PokemonsCell.id)
         collectionView.showsVerticalScrollIndicator = false
-        
         return collectionView
     }()
     
@@ -42,6 +38,7 @@ final class FavoritesView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Methods
     private func setupUI() {
         backgroundColor = .black
         addSubviews(pokemonsCollectionView, pokemonTypesCollectionView)

@@ -3,10 +3,12 @@ import UIKit
 
 final class FirebaseManager {
     
+    // MARK: - Properties
     static let shared = FirebaseManager()
     
     private let usersRef = Database.database().reference().child("Users")
     
+    // MARK: - Methods
     func updateFavoritePokemon(pokemon: EnhancedPokemon, from viewController: UIViewController) {
         if let currentUser = Auth.auth().currentUser {
             guard let pokemonId = pokemon.id else { return }

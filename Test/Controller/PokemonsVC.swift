@@ -1,8 +1,5 @@
 import UIKit
 
-
-
-
 final class PokemonsVC: UIViewController {
     
     // MARK: - Properties
@@ -47,6 +44,7 @@ final class PokemonsVC: UIViewController {
         setupNavigationControllerAppearance()
     }
     
+    // MARK: - Methods
     private func setupNavigationControllerAppearance() {
         title = "Pokemons"
         navigationItem.backButtonTitle = ""
@@ -193,7 +191,6 @@ extension PokemonsVC: UICollectionViewDataSource {
         }
     }
 }
-
 // MARK: - UICollectionViewDelegate
 extension PokemonsVC: UICollectionViewDelegate {
     
@@ -273,7 +270,6 @@ extension PokemonsVC: UICollectionViewDelegateFlowLayout {
         }
     }
 }
-
 // MARK: - UISearchControllerDelegate
 extension PokemonsVC: UISearchBarDelegate {
     
@@ -307,7 +303,6 @@ extension PokemonsVC: UISearchBarDelegate {
         }
     }
 }
-
 // MARK: - UIScrollViewDelegate
 extension PokemonsVC: UIScrollViewDelegate {
     
