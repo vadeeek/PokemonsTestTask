@@ -4,35 +4,30 @@ final class PokemonsVC: UIViewController {
     
     // MARK: - Properties
     private var pokemonsView: PokemonsView { return self.view as! PokemonsView }
-    
-    private var pokemonsData: [EnhancedPokemon] = []
-    private var filteredPokemonsData: [EnhancedPokemon] = []
-    private var allPokemonTypes: [String] = []
-    private var selectedCells: [IndexPath: CGFloat] = [:]
-    
-    private var isPokemonsLoading = false
-    private var isPokemonTypesRequestInProgress = false
+    private var pokemonsViewModel: PokemonsViewModel
     
     // MARK: - Life Cycle
+    init(pokemonsViewModel: PokemonsViewModel) {
+        self.pokemonsViewModel = pokemonsViewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         addSearchButton()
+        fetchAllPokemonInfo()
         
-        APIManager.shared.fetchAllPokemonNames()
-        APIManager.shared.fetchAllPokemonIDs()
-        fetchAllPokemonTypes()
-        
+        pokemonsViewModel.delegate = self
         pokemonsView.pokemonsCollectionView.dataSource = self
         pokemonsView.pokemonsCollectionView.delegate = self
         pokemonsView.pokemonTypesCollectionView.dataSource = self
         pokemonsView.pokemonTypesCollectionView.delegate = self
         
-//        var randomPokemonsIDsList: Set<Int> = []
-//        while randomPokemonsIDsList.count != 20 {
-//            let randomPokemonID = Int.random(in: 1...1302)
-//            randomPokemonsIDsList.insert(randomPokemonID)
-//        }
         getNextPagePokemonsList(isFirstPage: true)
     }
     
@@ -82,96 +77,57 @@ final class PokemonsVC: UIViewController {
         }
     }
     
-//    private func getPokemons(from pokemonsIDsArray: Set<Int>) {
     private func getNextPagePokemonsList(isFirstPage: Bool = false) {
-        guard !isPokemonsLoading else { return }
-        pokemonsView.spinner.startAnimating()
-        
-        isPokemonsLoading = true
-
-        APIManager.shared.getNextPagePokemonsList(isFirstPage: isFirstPage) { [weak self] result in
-            guard let self else { return }
-            
-            switch result {
-            case .success(let enhancedPokemonsArray):
-                self.handleSuccessfulResponse(enhancedPokemonsArray)
-                self.pokemonsView.spinner.stopAnimating()
-            case .failure(let error):
-                self.handleFailedResponse(error)
-            }
-        }
+        pokemonsViewModel.getNextPagePokemonsList(isFirstPage: isFirstPage)
     }
     
-    private func handleSuccessfulResponse(_ enhancedPokemonsArray: [EnhancedPokemon]) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
-            
-            self.pokemonsData += enhancedPokemonsArray
-            self.filteredPokemonsData += enhancedPokemonsArray
-            self.pokemonsView.pokemonsCollectionView.reloadData()
-            self.isPokemonsLoading = false
-        }
+    private func fetchAllPokemonInfo() {
+        fetchAllPokemonNames()
+        fetchAllPokemonIDs()
+        fetchAllPokemonTypes()
     }
-
-    private func handleFailedResponse(_ error: Error) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
-            
-            print("Error: \(error)")
-            self.isPokemonsLoading = false
-        }
+    
+    private func fetchAllPokemonNames() {
+        pokemonsViewModel.fetchAllPokemonNames()
+    }
+    
+    private func fetchAllPokemonIDs() {
+        pokemonsViewModel.fetchAllPokemonIDs()
     }
     
     private func fetchAllPokemonTypes() {
-        APIManager.shared.fetchAllPokemonTypes { [weak self] result in
-            switch result {
-            case .success(let allPokemonTypes):
-                DispatchQueue.main.async {
-                    guard let self else { return }
-                    self.allPokemonTypes = allPokemonTypes
-                    self.pokemonsView.pokemonTypesCollectionView.reloadData()
-                }
-            case .failure(let error):
-                DispatchQueue.main.async {
-                    print("Error: \(error)")
-                }
-            }
-        }
+        pokemonsViewModel.fetchAllPokemonTypes()
     }
     
     private func searchPokemons(byKeywordOrId keywordOrId: String) {
-        APIManager.shared.searchPokemons(byKeywordOrId: keywordOrId) { [weak self] result in
-            guard let self else { return }
-            
-            switch result {
-            case .success(let enhancedPokemonsArray):
-                DispatchQueue.main.async { [weak self] in
-                    guard let self else { return }
-                    
-                    self.filteredPokemonsData = enhancedPokemonsArray
-                    self.pokemonsView.pokemonsCollectionView.reloadData()
-                    self.selectedCells = [:]
-                    self.pokemonsView.pokemonTypesCollectionView.reloadData()
-                }
-            case .failure(let error):
-                DispatchQueue.main.async {
-                    print("Error: \(error)")
-                }
-            }
-        }
+        pokemonsViewModel.searchPokemons(byKeywordOrId: keywordOrId)
     }
 }
 
 // MARK: - Extensions
+// MARK: - PokemonsViewModelDelegate
+extension PokemonsVC: PokemonsViewModelDelegate {
+    func didUpdatePokemons() {
+        DispatchQueue.main.async {
+            self.pokemonsView.pokemonsCollectionView.reloadData()
+        }
+    }
+    
+    func didUpdatePokemonTypes() {
+        DispatchQueue.main.async {
+            self.pokemonsView.pokemonTypesCollectionView.reloadData()
+        }
+    }
+}
 // MARK: - UICollectionViewDataSource
 extension PokemonsVC: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
         if pokemonsView.pokemonTypesCollectionView == collectionView {
-            return allPokemonTypes.count
+            return pokemonsViewModel.allPokemonTypes.count
         } else {
-            return filteredPokemonsData.count
+            return pokemonsViewModel.filteredPokemons.count
         }
     }
     
@@ -180,12 +136,12 @@ extension PokemonsVC: UICollectionViewDataSource {
         if pokemonsView.pokemonTypesCollectionView == collectionView {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokemonsAllTypesCell.id, for: indexPath) as? PokemonsAllTypesCell else { fatalError("Unsupported cell") }
             cell.contentView.alpha = selectedCells[indexPath] ?? 0.5
-            cell.configure(with: allPokemonTypes[indexPath.row])
+            cell.configure(with: pokemonsViewModel.allPokemonTypes[indexPath.row])
 
             return cell
         } else {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokemonsCell.id, for: indexPath) as? PokemonsCell else { fatalError("Unsupported cell") }
-            cell.configure(with: filteredPokemonsData[indexPath.row])
+            cell.configure(with: pokemonsViewModel.filteredPokemons[indexPath.row])
             
             return cell
         }
@@ -197,7 +153,7 @@ extension PokemonsVC: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         if pokemonsView.pokemonTypesCollectionView == collectionView {
-            guard !isPokemonTypesRequestInProgress else { return }
+            guard !pokemonsViewModel.isPokemonTypesRequestInProgress else { return }
             
             for cell in collectionView.visibleCells {
                 cell.contentView.alpha = 0.5
@@ -209,7 +165,7 @@ extension PokemonsVC: UICollectionViewDelegate {
                 cell.contentView.alpha = 1.0
                 
                 pokemonsView.spinner.startAnimating()
-                isPokemonTypesRequestInProgress = true
+                pokemonsViewModel.isPokemonTypesRequestInProgress = true
                 
                 UIView.animate(withDuration: 0.7, delay: 0.0) { [weak self] in
                     guard let self else { return }
@@ -219,13 +175,13 @@ extension PokemonsVC: UICollectionViewDelegate {
                 DispatchQueue.main.async { [weak self] in
                     guard let self else { return }
                     
-                    APIManager.shared.getPokemons(byPokemonType: self.allPokemonTypes[indexPath.row].lowercased()) { enhancedPokemons in
+                    APIManager.shared.getPokemons(byPokemonType: self.pokemonsViewModel.allPokemonTypes[indexPath.row].lowercased()) { enhancedPokemons in
                         DispatchQueue.main.async { [weak self] in
                             guard let self else { return }
                             print("NEW DATA: \(enhancedPokemons)")
-                            self.filteredPokemonsData = enhancedPokemons
+                            self.pokemonsViewModel.filteredPokemons = enhancedPokemons
                             self.pokemonsView.pokemonsCollectionView.reloadData()
-                            self.isPokemonTypesRequestInProgress = false
+                            self.pokemonsViewModel.isPokemonTypesRequestInProgress = false
                             self.pokemonsView.spinner.stopAnimating()
                             
                             UIView.animate(withDuration: 0.7, delay: 0.0) { [weak self] in
@@ -243,7 +199,7 @@ extension PokemonsVC: UICollectionViewDelegate {
                     cell.contentView.alpha = 1.0
                 }
             }
-            let viewController = DetailsVC(pokemon: filteredPokemonsData[indexPath.row])
+            let viewController = DetailsVC(pokemon: pokemonsViewModel.filteredPokemons[indexPath.row])
             navigationController?.pushViewController(viewController, animated: true)
         }
     }
@@ -276,7 +232,7 @@ extension PokemonsVC: UISearchBarDelegate {
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         navigationItem.searchController = nil
         searchBar.text = nil
-        filteredPokemonsData = pokemonsData
+        pokemonsViewModel.filteredPokemons = pokemonsViewModel.pokemons
         pokemonsView.pokemonsCollectionView.reloadData()
         selectedCells = [:]
         pokemonsView.pokemonTypesCollectionView.reloadData()
@@ -285,7 +241,7 @@ extension PokemonsVC: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let searchText = searchBar.text else { return }
         if searchText.isEmpty {
-            filteredPokemonsData = pokemonsData
+            pokemonsViewModel.filteredPokemons = pokemonsViewModel.pokemons
             pokemonsView.pokemonsCollectionView.reloadData()
             selectedCells = [:]
             pokemonsView.pokemonTypesCollectionView.reloadData()
@@ -296,7 +252,7 @@ extension PokemonsVC: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.isEmpty {
-            filteredPokemonsData = pokemonsData
+            pokemonsViewModel.filteredPokemons = pokemonsViewModel.pokemons
             pokemonsView.pokemonsCollectionView.reloadData()
             selectedCells = [:]
             pokemonsView.pokemonTypesCollectionView.reloadData()

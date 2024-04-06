@@ -1,7 +1,7 @@
 import Foundation
 
 // MARK: - Pokemon
-struct Pokemon: Decodable {
+struct PokemonResponse: Decodable {
     let abilities: [Ability]?
     let height: Int?
     let id: Int?

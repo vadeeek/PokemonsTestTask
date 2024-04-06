@@ -16,7 +16,7 @@ struct EnhancedPokemon: Decodable, Equatable {
     let types: [Species]?
     let weight: Int?
     
-    init(pokemon: Pokemon) {
+    init(pokemon: PokemonResponse) {
         if let abilities = pokemon.abilities {
             var abilitiesArray: [Species] = []
             for abilityElement in abilities {

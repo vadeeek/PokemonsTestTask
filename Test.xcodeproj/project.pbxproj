@@ -48,6 +48,8 @@
 		4F92A3A22B88D95A0039C58A /* PokemonType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F92A3A12B88D95A0039C58A /* PokemonType.swift */; };
 		4F98D4AB2B7D615D00BA469E /* PokemonSpecies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F98D4AA2B7D615D00BA469E /* PokemonSpecies.swift */; };
 		4F98D4AD2B7D676F00BA469E /* EvolutionChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F98D4AC2B7D676F00BA469E /* EvolutionChain.swift */; };
+		4F9C79FE2BBBACB700BB186D /* PokemonsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9C79FD2BBBACB700BB186D /* PokemonsViewModel.swift */; };
+		4FAB3D242BC0230500EBEC30 /* PokemonsViewModelDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FAB3D232BC0230500EBEC30 /* PokemonsViewModelDelegate.swift */; };
 		4FC09C0E2B7BF700002656B8 /* LaunchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FC09C0D2B7BF700002656B8 /* LaunchView.swift */; };
 		4FC09C112B7BF773002656B8 /* LaunchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FC09C102B7BF773002656B8 /* LaunchVC.swift */; };
 		4FC09C132B7BFB7A002656B8 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4FC09C122B7BFB7A002656B8 /* Launch Screen.storyboard */; };
@@ -96,6 +98,8 @@
 		4F92A3A12B88D95A0039C58A /* PokemonType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonType.swift; sourceTree = "<group>"; };
 		4F98D4AA2B7D615D00BA469E /* PokemonSpecies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonSpecies.swift; sourceTree = "<group>"; };
 		4F98D4AC2B7D676F00BA469E /* EvolutionChain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionChain.swift; sourceTree = "<group>"; };
+		4F9C79FD2BBBACB700BB186D /* PokemonsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonsViewModel.swift; sourceTree = "<group>"; };
+		4FAB3D232BC0230500EBEC30 /* PokemonsViewModelDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonsViewModelDelegate.swift; sourceTree = "<group>"; };
 		4FC09C0D2B7BF700002656B8 /* LaunchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchView.swift; sourceTree = "<group>"; };
 		4FC09C102B7BF773002656B8 /* LaunchVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchVC.swift; sourceTree = "<group>"; };
 		4FC09C122B7BFB7A002656B8 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
@@ -286,6 +290,7 @@
 				4F8C24072B910A1B00DD6176 /* UnauthorizedProfileViewDelegate.swift */,
 				4F8C240B2B92757200DD6176 /* AuthorizedProfileViewDelegate.swift */,
 				4F8C240D2B929B3700DD6176 /* DetailsViewDelegate.swift */,
+				4FAB3D232BC0230500EBEC30 /* PokemonsViewModelDelegate.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -310,6 +315,7 @@
 		4FC2A60F2BBB7652007CBFCC /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				4F9C79FD2BBBACB700BB186D /* PokemonsViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -440,12 +446,14 @@
 				4FCCB9E42B84C91C008B96CB /* ComparePokemonsManager.swift in Sources */,
 				4F92A39E2B8808AD0039C58A /* ProfileVC.swift in Sources */,
 				4F98D4AD2B7D676F00BA469E /* EvolutionChain.swift in Sources */,
+				4F9C79FE2BBBACB700BB186D /* PokemonsViewModel.swift in Sources */,
 				4F8A96F92B8B794700A0B6B5 /* Species.swift in Sources */,
 				4F8255DA2B82CE4F005C363C /* CompareVC.swift in Sources */,
 				4F8255D42B82AEB7005C363C /* EnhancedPokemon.swift in Sources */,
 				4F553CD82A1A7E70004BBCF0 /* PokemonsCell.swift in Sources */,
 				4F553CDE2A1B58C9004BBCF0 /* DetailsVC.swift in Sources */,
 				4F8C240E2B929B3700DD6176 /* DetailsViewDelegate.swift in Sources */,
+				4FAB3D242BC0230500EBEC30 /* PokemonsViewModelDelegate.swift in Sources */,
 				4F82559A2B7EB329005C363C /* FavoritesVC.swift in Sources */,
 				4F553CE02A1B5A04004BBCF0 /* DetailsView.swift in Sources */,
 				4F8255CF2B826476005C363C /* Resources.swift in Sources */,

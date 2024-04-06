@@ -70,7 +70,7 @@ final class TabBarController: UITabBarController {
         tabBar.barTintColor = .black
         tabBar.backgroundColor = .black
         
-        let pokemonsController = PokemonsVC()
+        let pokemonsController = PokemonsVC(pokemonsViewModel: PokemonsViewModel())
         let itemsController = ItemsVC()
         let compareController = CompareVC()
         let profileController = ProfileVC()

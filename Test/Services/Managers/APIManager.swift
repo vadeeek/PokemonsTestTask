@@ -141,7 +141,7 @@ final class APIManager: APIManagerProtocol {
         
         URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data else { return }
-            if let pokemonData = try? JSONDecoder().decode(Pokemon.self, from: data) {
+            if let pokemonData = try? JSONDecoder().decode(PokemonResponse.self, from: data) {
                 let enhancedPokemon = EnhancedPokemon(pokemon: pokemonData)
                 completion(enhancedPokemon)
             } else {
@@ -206,7 +206,7 @@ final class APIManager: APIManagerProtocol {
                     print("No data")
                     return
                 }
-                if let pokemonData = try? JSONDecoder().decode(Pokemon.self, from: data) {
+                if let pokemonData = try? JSONDecoder().decode(PokemonResponse.self, from: data) {
                     let enhancedPokemon = EnhancedPokemon(pokemon: pokemonData)
                     enhancedPokemons.append(enhancedPokemon)
                 } else {
@@ -240,7 +240,7 @@ final class APIManager: APIManagerProtocol {
                     print("No data")
                     return
                 }
-                if let pokemonData = try? JSONDecoder().decode(Pokemon.self, from: data) {
+                if let pokemonData = try? JSONDecoder().decode(PokemonResponse.self, from: data) {
                     let enhancedPokemon = EnhancedPokemon(pokemon: pokemonData)
                     enhancedPokemons.append(enhancedPokemon)
                 } else {
@@ -364,7 +364,7 @@ final class APIManager: APIManagerProtocol {
                     print("No data")
                     return
                 }
-                if let pokemonData = try? JSONDecoder().decode(Pokemon.self, from: data) {
+                if let pokemonData = try? JSONDecoder().decode(PokemonResponse.self, from: data) {
                     let enhancedPokemon = EnhancedPokemon(pokemon: pokemonData)
                     evolutionPokemons[id] = enhancedPokemon
                 } else {
