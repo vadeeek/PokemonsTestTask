@@ -144,7 +144,7 @@
 				4F8255CD2B826456005C363C /* Helpers */,
 				4F553CCB2A1A64C5004BBCF0 /* Services */,
 				4F553CCC2A1A64C8004BBCF0 /* Views */,
-				4F553CCD2A1A64CF004BBCF0 /* Controller */,
+				4F553CCD2A1A64CF004BBCF0 /* Controllers */,
 				4FC2A60F2BBB7652007CBFCC /* ViewModels */,
 				4F553CE62A1E41A9004BBCF0 /* SupportingFiles */,
 			);
@@ -175,7 +175,7 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		4F553CCD2A1A64CF004BBCF0 /* Controller */ = {
+		4F553CCD2A1A64CF004BBCF0 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
 				4F8255952B7EAE51005C363C /* TabBarController.swift */,
@@ -187,7 +187,7 @@
 				4F553CDD2A1B58C9004BBCF0 /* DetailsVC.swift */,
 				4F8255992B7EB329005C363C /* FavoritesVC.swift */,
 			);
-			path = Controller;
+			path = Controllers;
 			sourceTree = "<group>";
 		};
 		4F553CD52A1A7E44004BBCF0 /* Pokemons */ = {
