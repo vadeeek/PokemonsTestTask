@@ -219,18 +219,23 @@ extension PokemonsVC: UICollectionViewDelegate {
                 DispatchQueue.main.async { [weak self] in
                     guard let self else { return }
                     
-                    APIManager.shared.getPokemons(byPokemonType: self.allPokemonTypes[indexPath.row].lowercased()) { enhancedPokemons in
-                        DispatchQueue.main.async { [weak self] in
-                            guard let self else { return }
-                            print("NEW DATA: \(enhancedPokemons)")
-                            self.filteredPokemonsData = enhancedPokemons
-                            self.pokemonsView.pokemonsCollectionView.reloadData()
-                            self.isPokemonTypesRequestInProgress = false
-                            self.pokemonsView.spinner.stopAnimating()
-                            
-                            UIView.animate(withDuration: 0.7, delay: 0.0) { [weak self] in
-                                guard let self else { return }
-                                self.pokemonsView.pokemonsCollectionView.alpha = 1.0
+                    APIManager.shared.getPokemons(byPokemonType: self.allPokemonTypes[indexPath.row].lowercased()) { [weak self] result in
+                        guard let self else { return }
+                        DispatchQueue.main.async {
+                            switch result {
+                            case .success(let enhancedPokemons):
+                                print("NEW DATA: \(enhancedPokemons)")
+                                self.filteredPokemonsData = enhancedPokemons
+                                self.pokemonsView.pokemonsCollectionView.reloadData()
+                                self.isPokemonTypesRequestInProgress = false
+                                self.pokemonsView.spinner.stopAnimating()
+                                
+                                UIView.animate(withDuration: 0.7, delay: 0.0) { [weak self] in
+                                    guard let self else { return }
+                                    self.pokemonsView.pokemonsCollectionView.alpha = 1.0
+                                }
+                            case .failure(_):
+                                print("NO DATA")
                             }
                         }
                     }

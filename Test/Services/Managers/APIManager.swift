@@ -15,11 +15,11 @@ protocol APIManagerProtocol {
     func fetchAllPokemonIDs()
     func fetchAllPokemonTypes(completion: @escaping (Result<[String], Error>) -> Void)
     func searchPokemons(byKeywordOrId keywordOrId: String, completion: @escaping (Result<[EnhancedPokemon], Error>) -> Void)
-    func getPokemon(byID id: Int, completion: @escaping (EnhancedPokemon) -> Void)
-    func getPokemons(byPokemonType pokemonType: String, completion: @escaping ([EnhancedPokemon]) -> Void)
+    func getPokemon(byID id: Int, completion: @escaping (Result<EnhancedPokemon, Error>) -> Void)
+    func getPokemons(byPokemonType pokemonType: String, completion: @escaping (Result<[EnhancedPokemon], Error>) -> Void)
     func getNextPagePokemonsList(isFirstPage: Bool, completion: @escaping (Result<[EnhancedPokemon], Error>) -> Void)
-    func getPokemonsForEvolution(fromPokemonIDsArray pokemonIDsArray: [Int], completion: @escaping ([EnhancedPokemon], [Int]) -> Void)
-    func getEvolutionChainArray(byUrlString urlString: String, completion: @escaping ([String]) -> Void)
+    func getPokemonsForEvolution(fromPokemonIDsArray pokemonIDsArray: [Int], completion: @escaping (Result<([EnhancedPokemon], [Int]), Error>) -> Void)
+    func getEvolutionChainArray(byUrlString urlString: String, completion: @escaping (Result<[String], Error>) -> Void)
 }
 
 final class APIManager: APIManagerProtocol {
@@ -125,17 +125,17 @@ final class APIManager: APIManagerProtocol {
         if let id = Int(keywordOrId) {
             let filteredPokemonIDs = Set(filterPokemonIDs(bySubID: id))
             getPokemons(fromPokemonIDsArray: filteredPokemonIDs) { enhancedPokemonsArray in
-                completion(.success(enhancedPokemonsArray))
+                completion(enhancedPokemonsArray)
             }
         } else {
             let filteredPokemonNames = Set(filterPokemonNames(bySubstring: keywordOrId))
             getPokemons(fromPokemonNamesArray: filteredPokemonNames) { enhancedPokemonsArray in
-                completion(.success(enhancedPokemonsArray))
+                completion(enhancedPokemonsArray)
             }
         }
     }
     
-    func getPokemon(byID id: Int, completion: @escaping (EnhancedPokemon) -> Void) {
+    func getPokemon(byID id: Int, completion: @escaping (Result<EnhancedPokemon, Error>) -> Void) {
         guard let url = URL(string: baseUrlString + "pokemon/\(id)/") else { return }
         let request = URLRequest(url: url)
         
@@ -143,7 +143,7 @@ final class APIManager: APIManagerProtocol {
             guard let data else { return }
             if let pokemonData = try? JSONDecoder().decode(Pokemon.self, from: data) {
                 let enhancedPokemon = EnhancedPokemon(pokemon: pokemonData)
-                completion(enhancedPokemon)
+                completion(.success(enhancedPokemon))
             } else {
                 print("fail pokemon! pokemonID: \(id)")
             }
@@ -185,7 +185,7 @@ final class APIManager: APIManagerProtocol {
 //        }
 //    }
     
-    private func getPokemons(fromPokemonNamesArray pokemonNamesArray: Set<String>, completion: @escaping ([EnhancedPokemon]) -> Void) {
+    private func getPokemons(fromPokemonNamesArray pokemonNamesArray: Set<String>, completion: @escaping (Result<[EnhancedPokemon], Error>) -> Void) {
         var enhancedPokemons: [EnhancedPokemon] = []
         let group = DispatchGroup()
 
@@ -215,11 +215,11 @@ final class APIManager: APIManagerProtocol {
             }.resume()
         }
         group.notify(queue: DispatchQueue.main) {
-            completion(enhancedPokemons)
+            completion(.success(enhancedPokemons))
         }
     }
     
-    private func getPokemons(fromPokemonIDsArray pokemonIDsArray: Set<Int>, completion: @escaping ([EnhancedPokemon]) -> Void) {
+    private func getPokemons(fromPokemonIDsArray pokemonIDsArray: Set<Int>, completion: @escaping (Result<[EnhancedPokemon], Error>) -> Void) {
         var enhancedPokemons: [EnhancedPokemon] = []
         let group = DispatchGroup()
 
@@ -249,11 +249,11 @@ final class APIManager: APIManagerProtocol {
             }.resume()
         }
         group.notify(queue: DispatchQueue.main) {
-            completion(enhancedPokemons)
+            completion(.success(enhancedPokemons))
         }
     }
     
-    func getPokemons(byPokemonType pokemonType: String, completion: @escaping ([EnhancedPokemon]) -> Void) {
+    func getPokemons(byPokemonType pokemonType: String, completion: @escaping (Result<[EnhancedPokemon], Error>) -> Void) {
         // TODO: сделать одну функцию из нескольких чтобы передавать enum значение (.type, .name, .id итд)
 //        func getPokemons(by .type("fire"), completion: @escaping ([EnhancedPokemon]) -> Void) {
         //        let group = DispatchGroup()
@@ -339,7 +339,7 @@ final class APIManager: APIManagerProtocol {
                 
                 let pokemonsNames = Set(pokemonsList.results.compactMap { $0?.name })
                 self.getPokemons(fromPokemonNamesArray: pokemonsNames) { enhancedPokemons in
-                    completion(.success(enhancedPokemons))
+                    completion(enhancedPokemons)
                 }
             } catch {
                 completion(.failure(NetworkError.decodingError))
@@ -347,7 +347,7 @@ final class APIManager: APIManagerProtocol {
         }.resume()
     }
     
-    func getPokemonsForEvolution(fromPokemonIDsArray pokemonIDsArray: [Int], completion: @escaping ([EnhancedPokemon], [Int]) -> Void) {
+    func getPokemonsForEvolution(fromPokemonIDsArray pokemonIDsArray: [Int], completion: @escaping (Result<([EnhancedPokemon], [Int]), Error>) -> Void) {
         var evolutionPokemons: [Int: EnhancedPokemon] = [:]
         let group = DispatchGroup() // Создаем DispatchGroup для отслеживания завершения всех запросов
         
@@ -378,11 +378,11 @@ final class APIManager: APIManagerProtocol {
             let sortedEvolutionPokemonsArray = sortedImages.map { $0.value } // Сохранить только значения (покемонов) в массиве для отображения в таблице
             let sortedEvolutionKeysArray = sortedImages.map { $0.key }
             
-            completion(sortedEvolutionPokemonsArray, sortedEvolutionKeysArray)
+            completion(.success((sortedEvolutionPokemonsArray, sortedEvolutionKeysArray)))
         }
     }
     
-    func getEvolutionChainArray(byUrlString urlString: String, completion: @escaping ([String]) -> Void) {
+    func getEvolutionChainArray(byUrlString urlString: String, completion: @escaping (Result<[String], Error>) -> Void) {
         guard let url = URL(string: urlString) else { return }
         let request = URLRequest(url: url)
         
@@ -391,10 +391,15 @@ final class APIManager: APIManagerProtocol {
             if let pokemonSpeciesData = try? JSONDecoder().decode(PokemonSpecies.self, from: data) {
                 self.getEvolutionChain(byUrlString: pokemonSpeciesData.evolutionChain?.url, completion: { evolutionChainData in
                     var  evolutionURLs: [String] = []
-                    evolutionURLs.append(evolutionChainData.chain!.species.url!)
-                    
-                    self.addEvolutionURLs(fromEvolutionChains: (evolutionChainData.chain?.evolvesTo)!, to: &evolutionURLs)
-                    completion(evolutionURLs)
+                    switch evolutionChainData {
+                    case .success(let evolutionChainData):
+                        evolutionURLs.append(evolutionChainData.chain!.species.url!)
+                        
+                        self.addEvolutionURLs(fromEvolutionChains: (evolutionChainData.chain?.evolvesTo)!, to: &evolutionURLs)
+                        completion(.success(evolutionURLs))
+                    case .failure(_):
+                        completion(.failure(NetworkError.noData))
+                    }
                 })
             }
         }.resume()
@@ -413,14 +418,14 @@ final class APIManager: APIManagerProtocol {
         }
     }
     
-    private func getEvolutionChain(byUrlString urlString: String?, completion: @escaping (EvolutionChain) -> Void) {
+    private func getEvolutionChain(byUrlString urlString: String?, completion: @escaping (Result<EvolutionChain, Error>) -> Void) {
         guard let urlString, let url = URL(string: urlString) else { return }
         let request = URLRequest(url: url)
         
         URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data else { return }
             if let evolutionChainData = try? JSONDecoder().decode(EvolutionChain.self, from: data) {
-                completion(evolutionChainData)
+                completion(.success(evolutionChainData))
             } else {
                 print("fail chain!")
             }

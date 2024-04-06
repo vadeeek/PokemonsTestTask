@@ -88,21 +88,26 @@ final class DetailsVC: UIViewController {
     
     private func getEvolutionChain() {
         guard let pokemonSpeciesURL = currentPokemon.species?.url else { return }
-        APIManager.shared.getEvolutionChainArray(byUrlString: pokemonSpeciesURL) { chainArray in
-            var pokemonEvolutionsIDs: [Int] = []
-            for element in chainArray {
-                if let pokemonID = self.extractPokemonId(from: element) {
-                    pokemonEvolutionsIDs.append(pokemonID)
-                    self.pokemonEvolutionsIDs.append(pokemonID)
+        APIManager.shared.getEvolutionChainArray(byUrlString: pokemonSpeciesURL) { result in
+            switch result {
+            case .success(let chainArray):
+                var pokemonEvolutionsIDs: [Int] = []
+                for element in chainArray {
+                    if let pokemonID = self.extractPokemonId(from: element) {
+                        pokemonEvolutionsIDs.append(pokemonID)
+                        self.pokemonEvolutionsIDs.append(pokemonID)
+                    }
                 }
+                self.getEvolutionPokemons(from: pokemonEvolutionsIDs)
+            case .failure(_):
+                print("No evolution data!")
             }
-            self.getEvolutionPokemons(from: pokemonEvolutionsIDs)
         }
     }
     
     private func extractPokemonId(from urlString: String) -> Int? {
         let components = urlString.components(separatedBy: "/")
-        let filteredComponents = components.filter { !$0.isEmpty }
+        _ = components.filter { !$0.isEmpty }
         
         for component in components {
             if let id = Int(component) {
@@ -115,12 +120,17 @@ final class DetailsVC: UIViewController {
     }
     
     private func getEvolutionPokemons(from pokemonsIDsArray: [Int]) {
-        APIManager.shared.getPokemonsForEvolution(fromPokemonIDsArray: pokemonsIDsArray) { [weak self] evolutionPokemons, pokemonsEvolutionsIDs in
-            guard let self else { return }
-            DispatchQueue.main.async {
-                self.evolutionPokemons = evolutionPokemons
-                self.pokemonEvolutionsIDs = pokemonsEvolutionsIDs
-                self.detailsView.evolutionCollectionView.reloadData()
+        APIManager.shared.getPokemonsForEvolution(fromPokemonIDsArray: pokemonsIDsArray) { [weak self] result in
+            switch result {
+            case .success((let evolutionPokemons, let pokemonsEvolutionsIDs)):
+                DispatchQueue.main.async {
+                    guard let self else { return }
+                    self.evolutionPokemons = evolutionPokemons
+                    self.pokemonEvolutionsIDs = pokemonsEvolutionsIDs
+                    self.detailsView.evolutionCollectionView.reloadData()
+                }
+            case .failure(_):
+                print("No evolution data!")
             }
         }
     }
@@ -215,14 +225,19 @@ extension DetailsVC: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView == detailsView.evolutionCollectionView {
-            APIManager.shared.getPokemon(byID: pokemonEvolutionsIDs[indexPath.row]) { pokemon in
-                DispatchQueue.main.async { [weak self] in
-                    guard let self else { return }
-                    if let currentPokemonID = self.currentPokemon.id, let evolutionPokemonID = pokemon.id {
-                        if currentPokemonID != evolutionPokemonID {
-                            self.navigationController?.pushViewController(DetailsVC(pokemon: pokemon), animated: true)
+            APIManager.shared.getPokemon(byID: pokemonEvolutionsIDs[indexPath.row]) { [weak self] result in
+                guard let self else { return }
+                switch result {
+                case .success(let pokemon):
+                    DispatchQueue.main.async {
+                        if let currentPokemonID = self.currentPokemon.id, let evolutionPokemonID = pokemon.id {
+                            if currentPokemonID != evolutionPokemonID {
+                                self.navigationController?.pushViewController(DetailsVC(pokemon: pokemon), animated: true)
+                            }
                         }
                     }
+                case .failure(_):
+                    print("No pokemon data!")
                 }
             }
         }
