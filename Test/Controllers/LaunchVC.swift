@@ -15,7 +15,17 @@ final class LaunchVC: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
             let tabBarController = TabBarController()
             self.navigationController?.navigationBar.isHidden = true
-            self.navigationController?.pushViewController(tabBarController, animated: true)
+            
+            if var viewControllers = self.navigationController?.viewControllers {
+                // Удаляем контроллер
+                viewControllers = viewControllers.filter { !$0.isKind(of: LaunchVC.self) }
+                
+                // Добавляем новый контроллер в стек
+                viewControllers.append(tabBarController)
+                
+                // Применяем измененный стек контроллеров
+                self.navigationController?.setViewControllers(viewControllers, animated: true)
+            }
         }
     }
     
