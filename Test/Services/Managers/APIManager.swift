@@ -10,13 +10,19 @@ protocol APIManagerProtocol {
     var allPokemonNames: [String] { get }
     var allPokemonIDs: [Int] { get }
     var allPokemonTypes: [String] { get }
+    var allItemNames: [String] { get }
+    var allItemIDs: [Int] { get }
+    var allItemCategories: [String] { get }
     
     func fetchAllPokemonNames()
     func fetchAllPokemonIDs()
     func fetchAllPokemonTypes(completion: @escaping (Result<[String], Error>) -> Void)
+    func fetchAllItemCategories(completion: @escaping (Result<[String], Error>) -> Void)
     func searchPokemons(byKeywordOrId keywordOrId: String, completion: @escaping (Result<[EnhancedPokemon], Error>) -> Void)
+    func searchItems(byKeywordOrId keywordOrId: String, completion: @escaping (Result<[EnhancedItem], Error>) -> Void)
     func getPokemon(byID id: Int, completion: @escaping (Result<EnhancedPokemon, Error>) -> Void)
     func getPokemons(byPokemonType pokemonType: String, completion: @escaping (Result<[EnhancedPokemon], Error>) -> Void)
+    func getItems(byItemCategory itemCategory: String, completion: @escaping (Result<[EnhancedItem], Error>) -> Void)
     func getNextPagePokemonsList(isFirstPage: Bool, completion: @escaping (Result<[EnhancedPokemon], Error>) -> Void)
     func getPokemonsForEvolution(fromPokemonIDsArray pokemonIDsArray: [Int], completion: @escaping (Result<([EnhancedPokemon], [Int]), Error>) -> Void)
     func getEvolutionChainArray(byUrlString urlString: String, completion: @escaping (Result<[String], Error>) -> Void)
@@ -31,17 +37,22 @@ final class APIManager: APIManagerProtocol {
     private let baseUrlString = "https://pokeapi.co/api/v2/"
     private let pokemonsStartingListUrlString = "https://pokeapi.co/api/v2/pokemon/?limit=20"
     private var pokemonsListNextPageUrlString: String? = nil
+    private let itemsStartingListUrlString = "https://pokeapi.co/api/v2/item/?limit=20"
+    private var itemsListNextPageUrlString: String? = nil
     private var isLastPage = false
     
     var allPokemonNames: [String] = []
     var allPokemonIDs: [Int] = []
     var allPokemonTypes: [String] = []
+    var allItemNames: [String] = []
+    var allItemIDs: [Int] = []
+    var allItemCategories: [String] = []
 
     // MARK: - Methods
     func fetchAllPokemonNames() {
         if let url = URL(string: "https://pokeapi.co/api/v2/pokemon/?limit=1350") {
             URLSession.shared.dataTask(with: url) { data, _, error in
-                if let data = data {
+                if let data {
                     do {
                         let response = try JSONDecoder().decode(PokemonsList.self, from: data)
                         self.allPokemonNames = response.results.compactMap { $0?.name }
@@ -60,7 +71,7 @@ final class APIManager: APIManagerProtocol {
     func fetchAllPokemonIDs() {
         if let url = URL(string: "https://pokeapi.co/api/v2/pokemon/?limit=1350") {
             URLSession.shared.dataTask(with: url) { data, _, error in
-                if let data = data {
+                if let data {
                     do {
                         let response = try JSONDecoder().decode(PokemonsList.self, from: data)
                         self.allPokemonIDs = response.results.compactMap { result -> Int? in
@@ -90,11 +101,80 @@ final class APIManager: APIManagerProtocol {
                     completion(.failure(error))
                     return
                 }
-                if let data = data {
+                if let data {
                     do {
                         let response = try JSONDecoder().decode(PokemonTypesList.self, from: data)
                         self.allPokemonTypes = response.results.compactMap { $0?.name }
                         completion(.success(self.allPokemonTypes))
+                    } catch {
+                        completion(.failure(NetworkError.decodingError))
+                    }
+                } else {
+                    completion(.failure(NetworkError.noData))
+                }
+            }.resume()
+        } else {
+            completion(.failure(NetworkError.invalidURL))
+        }
+    }
+    
+    func fetchAllItemNames() {
+        if let url = URL(string: "https://pokeapi.co/api/v2/item/?limit=2200") {
+            URLSession.shared.dataTask(with: url) { data, _, error in
+                if let data {
+                    do {
+                        let response = try JSONDecoder().decode(ItemsList.self, from: data)
+                        self.allItemNames = response.results.compactMap { $0?.name }
+                    } catch {
+                        print("Error decoding JSON: \(error)")
+                    }
+                } else {
+                    print("Error fetching data: \(error?.localizedDescription ?? "Unknown error")")
+                }
+            }.resume()
+        } else {
+            print("Invalid URL")
+        }
+    }
+    
+    func fetchAllItemIDs() {
+        if let url = URL(string: "https://pokeapi.co/api/v2/item/?limit=2200") {
+            URLSession.shared.dataTask(with: url) { data, _, error in
+                if let data {
+                    do {
+                        let response = try JSONDecoder().decode(ItemsList.self, from: data)
+                        self.allItemIDs = response.results.compactMap { result -> Int? in
+                            guard let url = result?.url else { return nil }
+                            if let idString = url.components(separatedBy: "/").dropLast().last, let id = Int(idString) {
+                                return id
+                            } else {
+                                return nil
+                            }
+                        }
+                    } catch {
+                        print("Error decoding JSON: \(error)")
+                    }
+                } else {
+                    print("Error fetching data: \(error?.localizedDescription ?? "Unknown error")")
+                }
+            }.resume()
+        } else {
+            print("Invalid URL")
+        }
+    }
+    
+    func fetchAllItemCategories(completion: @escaping (Result<[String], Error>) -> Void) {
+        if let url = URL(string: "https://pokeapi.co/api/v2/item-category/?offset=0&limit=60") {
+            URLSession.shared.dataTask(with: url) { data, _, error in
+                if let error {
+                    completion(.failure(error))
+                    return
+                }
+                if let data {
+                    do {
+                        let response = try JSONDecoder().decode(ItemCategoriesList.self, from: data)
+                        self.allItemCategories = response.results.compactMap { $0?.name }
+                        completion(.success(self.allItemCategories))
                     } catch {
                         completion(.failure(NetworkError.decodingError))
                     }
@@ -121,6 +201,20 @@ final class APIManager: APIManagerProtocol {
         return filteredPokemonIDs
     }
     
+    private func filterItemNames(bySubstring substring: String) -> [String] {
+        let filteredItemNames = allItemNames.filter { $0.range(of: substring, options: .caseInsensitive) != nil }
+        return filteredItemNames
+    }
+    
+    private func filterItemIDs(bySubID: Int) -> [Int] {
+        let filteredItemIDs = allItemIDs.filter { id -> Bool in
+            let idString = String(id)
+            let subIDString = String(bySubID)
+            return idString.range(of: subIDString) != nil
+        }
+        return filteredItemIDs
+    }
+    
     func searchPokemons(byKeywordOrId keywordOrId: String, completion: @escaping (Result<[EnhancedPokemon], Error>) -> Void) {
         if let id = Int(keywordOrId) {
             let filteredPokemonIDs = Set(filterPokemonIDs(bySubID: id))
@@ -131,6 +225,20 @@ final class APIManager: APIManagerProtocol {
             let filteredPokemonNames = Set(filterPokemonNames(bySubstring: keywordOrId))
             getPokemons(fromPokemonNamesArray: filteredPokemonNames) { enhancedPokemonsArray in
                 completion(enhancedPokemonsArray)
+            }
+        }
+    }
+    
+    func searchItems(byKeywordOrId keywordOrId: String, completion: @escaping (Result<[EnhancedItem], Error>) -> Void) {
+        if let id = Int(keywordOrId) {
+            let filteredItemsIDs = Set(filterItemIDs(bySubID: id))
+            getItems(fromItemIDsArray: filteredItemsIDs) { enhancedItemsArray in
+                completion(enhancedItemsArray)
+            }
+        } else {
+            let filteredItemNames = Set(filterItemNames(bySubstring: keywordOrId))
+            getItems(fromItemNamesArray: filteredItemNames) { enhancedItemsArray in
+                completion(enhancedItemsArray)
             }
         }
     }
@@ -219,6 +327,40 @@ final class APIManager: APIManagerProtocol {
         }
     }
     
+    private func getItems(fromItemNamesArray itemNamesArray: Set<String>, completion: @escaping (Result<[EnhancedItem], Error>) -> Void) {
+        var enhancedItems: [EnhancedItem] = []
+        let group = DispatchGroup()
+
+        for name in itemNamesArray {
+            group.enter()
+
+            guard let url = URL(string: baseUrlString + "item/\(name)/") else {
+                group.leave()
+                continue
+            }
+
+            let request = URLRequest(url: url)
+            URLSession.shared.dataTask(with: request) { data, response, error in
+                defer {
+                    group.leave()
+                }
+                guard let data else {
+                    print("No data")
+                    return
+                }
+                if let itemData = try? JSONDecoder().decode(Item.self, from: data) {
+                    let enhancedItem = EnhancedItem(item: itemData)
+                    enhancedItems.append(enhancedItem)
+                } else {
+                    print("Failed to fetch item! ItemName: \(name)")
+                }
+            }.resume()
+        }
+        group.notify(queue: DispatchQueue.main) {
+            completion(.success(enhancedItems))
+        }
+    }
+    
     private func getPokemons(fromPokemonIDsArray pokemonIDsArray: Set<Int>, completion: @escaping (Result<[EnhancedPokemon], Error>) -> Void) {
         var enhancedPokemons: [EnhancedPokemon] = []
         let group = DispatchGroup()
@@ -250,6 +392,40 @@ final class APIManager: APIManagerProtocol {
         }
         group.notify(queue: DispatchQueue.main) {
             completion(.success(enhancedPokemons))
+        }
+    }
+    
+    private func getItems(fromItemIDsArray itemIDsArray: Set<Int>, completion: @escaping (Result<[EnhancedItem], Error>) -> Void) {
+        var enhancedItems: [EnhancedItem] = []
+        let group = DispatchGroup()
+
+        for id in itemIDsArray {
+            group.enter()
+
+            guard let url = URL(string: baseUrlString + "item/\(id)/") else {
+                group.leave()
+                continue
+            }
+
+            let request = URLRequest(url: url)
+            URLSession.shared.dataTask(with: request) { data, response, error in
+                defer {
+                    group.leave()
+                }
+                guard let data else {
+                    print("No data")
+                    return
+                }
+                if let itemData = try? JSONDecoder().decode(Item.self, from: data) {
+                    let enhancedItem = EnhancedItem(item: itemData)
+                    enhancedItems.append(enhancedItem)
+                } else {
+                    print("Failed to fetch item! ItemID: \(id)")
+                }
+            }.resume()
+        }
+        group.notify(queue: DispatchQueue.main) {
+            completion(.success(enhancedItems))
         }
     }
     
@@ -292,6 +468,46 @@ final class APIManager: APIManagerProtocol {
         //            completion(enhancedPokemons)
         //        }
     }
+    
+    func getItems(byItemCategory itemCategory: String, completion: @escaping (Result<[EnhancedItem], Error>) -> Void) {
+        // TODO: сделать одну функцию из нескольких чтобы передавать enum значение (.type, .name, .id итд)
+//        func getPokemons(by .type("fire"), completion: @escaping ([EnhancedPokemon]) -> Void) {
+        //        let group = DispatchGroup()
+        
+        //        group.enter()
+        
+        guard let url = URL(string: baseUrlString + "item-category/\(itemCategory)/") else {
+            //            group.leave()
+            return
+        }
+        
+        let request = URLRequest(url: url)
+        URLSession.shared.dataTask(with: request) { data, _, error in
+            defer {
+                //                group.leave()
+            }
+            guard let data else {
+                // FIX: везде сделать обработку ошибок
+                print("No data")
+                return
+            }
+            if let itemCategoryData = try? JSONDecoder().decode(ItemCategory.self, from: data) {
+                if let itemElements = itemCategoryData.items {
+                    let itemNames = Set(itemElements.compactMap({ $0.name }))
+                    self.getItems(fromItemNamesArray: itemNames) { enhancedItems in
+                        completion(enhancedItems)
+                    }
+                } else {
+                    print("Failed to fetch item! ItemCategory: \(itemCategory)")
+                }
+            } else {
+                print("Failed to fetch item! ItemCategory: \(itemCategory)")
+            }
+        }.resume()
+        //        group.notify(queue: DispatchQueue.main) {
+        //            completion(enhancedPokemons)
+        //        }
+    }
 
     func getNextPagePokemonsList(isFirstPage: Bool = false, completion: @escaping (Result<[EnhancedPokemon], Error>) -> Void) {
         guard !isLastPage else {
@@ -318,12 +534,12 @@ final class APIManager: APIManagerProtocol {
         
         let request = URLRequest(url: url)
         URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
+            if let error {
                 completion(.failure(error))
                 return
             }
             
-            guard let data = data else {
+            guard let data else {
                 completion(.failure(NetworkError.noData))
                 return
             }
@@ -340,6 +556,60 @@ final class APIManager: APIManagerProtocol {
                 let pokemonsNames = Set(pokemonsList.results.compactMap { $0?.name })
                 self.getPokemons(fromPokemonNamesArray: pokemonsNames) { enhancedPokemons in
                     completion(enhancedPokemons)
+                }
+            } catch {
+                completion(.failure(NetworkError.decodingError))
+            }
+        }.resume()
+    }
+    
+    func getNextPageItemsList(isFirstPage: Bool = false, completion: @escaping (Result<[EnhancedItem], Error>) -> Void) {
+        guard !isLastPage else {
+            completion(.success([]))
+            return
+        }
+        
+        var urlString = ""
+        
+        if isFirstPage {
+            urlString = "https://pokeapi.co/api/v2/item/?limit=20"
+        } else {
+            guard let nextPageUrlString = itemsListNextPageUrlString else {
+                completion(.success([]))
+                return
+            }
+            urlString = nextPageUrlString
+        }
+        
+        guard let url = URL(string: urlString) else {
+            completion(.failure(NetworkError.invalidURL))
+            return
+        }
+        
+        let request = URLRequest(url: url)
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error {
+                completion(.failure(error))
+                return
+            }
+            
+            guard let data else {
+                completion(.failure(NetworkError.noData))
+                return
+            }
+            
+            do {
+                let itemsList = try JSONDecoder().decode(ItemsList.self, from: data)
+                if let nextUrlString = itemsList.next {
+                    self.itemsListNextPageUrlString = nextUrlString
+                } else {
+                    self.itemsListNextPageUrlString = nil
+                    self.isLastPage = true
+                }
+                
+                let itemNames = Set(itemsList.results.compactMap { $0?.name })
+                self.getItems(fromItemNamesArray: itemNames) { enhancedItems in
+                    completion(enhancedItems)
                 }
             } catch {
                 completion(.failure(NetworkError.decodingError))
