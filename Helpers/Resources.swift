@@ -25,6 +25,9 @@ enum Resources {
         enum Pokemon {
             static var pokemonPictureNoImage = UIImage(named: "noImage")
         }
+        enum Item {
+            static var itemPictureNoImage = UIImage(named: "noImage") // FIXME: поменять изображение на другое для items
+        }
         enum DetailsScreen {
             static var evolutionBG = UIImage(named: "evolutionBG")
             static var evolutionArrow = UIImage(named: "arrow")

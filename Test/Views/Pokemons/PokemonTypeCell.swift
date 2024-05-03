@@ -32,7 +32,7 @@ final class PokemonTypeCell: UICollectionViewCell {
     
     func configure(with ability: String) {
 //        typeLabel.textColor = .black
-        switch TypeFormatter.shared.formate(typeString: ability) {
+        switch TypeFormatter.shared.format(typeString: ability) {
         case (let typeString, let typeColor):
             switch typeColor {
             case .systemBlue, .darkGray, .black, .systemGray3, .purple:

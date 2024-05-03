@@ -86,7 +86,8 @@ final class PokemonsCell: UICollectionViewCell {
     }
     
     func configure(with pokemon: EnhancedPokemon) {
-        nameLabel.text = pokemon.name?.capitalized ?? "???"
+        let pokemonName = pokemon.name ?? "???"
+        nameLabel.text = TypeFormatter.shared.format(type: .name(string: pokemonName))
         
         if let pokemonID = pokemon.id {
             idLabel.text = "\(pokemonID)"
