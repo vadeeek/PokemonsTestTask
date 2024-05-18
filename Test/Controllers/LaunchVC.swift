@@ -14,8 +14,8 @@ final class LaunchVC: UIViewController {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
             let tabBarController = TabBarController()
+            self.navigationController?.setViewControllers([tabBarController], animated: true)
             self.navigationController?.navigationBar.isHidden = true
-            self.navigationController?.pushViewController(tabBarController, animated: true)
         }
     }
     
