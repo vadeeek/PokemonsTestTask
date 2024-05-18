@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4F0E9FB42BE4515B0098F80B /* ItemCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0E9FB32BE4515B0098F80B /* ItemCategory.swift */; };
+		4F27A8782BF91893006169D3 /* UIColor+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F27A8772BF91893006169D3 /* UIColor+Ext.swift */; };
 		4F553CB82A1A6408004BBCF0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F553CB72A1A6408004BBCF0 /* AppDelegate.swift */; };
 		4F553CBC2A1A6408004BBCF0 /* PokemonsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F553CBB2A1A6408004BBCF0 /* PokemonsVC.swift */; };
 		4F553CC12A1A6412004BBCF0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4F553CC02A1A6412004BBCF0 /* Assets.xcassets */; };
@@ -69,6 +70,7 @@
 
 /* Begin PBXFileReference section */
 		4F0E9FB32BE4515B0098F80B /* ItemCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemCategory.swift; sourceTree = "<group>"; };
+		4F27A8772BF91893006169D3 /* UIColor+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Ext.swift"; sourceTree = "<group>"; };
 		4F553CB42A1A6408004BBCF0 /* Test.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Test.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F553CB72A1A6408004BBCF0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4F553CBB2A1A6408004BBCF0 /* PokemonsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonsVC.swift; sourceTree = "<group>"; };
@@ -141,6 +143,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4F27A8762BF91883006169D3 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				4F27A8772BF91893006169D3 /* UIColor+Ext.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		4F553CAB2A1A6407004BBCF0 = {
 			isa = PBXGroup;
 			children = (
@@ -162,6 +172,7 @@
 			isa = PBXGroup;
 			children = (
 				4F8C24062B910A1000DD6176 /* Protocols */,
+				4F27A8762BF91883006169D3 /* Extensions */,
 				4F553CCB2A1A64C5004BBCF0 /* Services */,
 				4F553CCC2A1A64C8004BBCF0 /* Views */,
 				4F553CCD2A1A64CF004BBCF0 /* Controllers */,
@@ -459,6 +470,7 @@
 				4F8255982B7EB221005C363C /* ItemsVC.swift in Sources */,
 				4FDE67CA2BE43E300080BC59 /* ItemsCell.swift in Sources */,
 				4FE903542B7E861800B98FA8 /* PokemonTypeCell.swift in Sources */,
+				4F27A8782BF91893006169D3 /* UIColor+Ext.swift in Sources */,
 				4FDE67BD2BE40C9E0080BC59 /* Item.swift in Sources */,
 				4F8A97072B8CE37600A0B6B5 /* UnauthorizedProfileView.swift in Sources */,
 				4F92A3A02B88D6A60039C58A /* PokemonsList.swift in Sources */,

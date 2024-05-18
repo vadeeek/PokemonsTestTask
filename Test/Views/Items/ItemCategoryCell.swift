@@ -33,7 +33,15 @@ final class ItemCategoryCell: UICollectionViewCell {
     func configure(with category: String) {
         let formattedCategoryString = TypeFormatter.shared.format(type: .itemCategory(string: category))
         categoryLabel.text = "\(formattedCategoryString)"
-        contentView.backgroundColor = .systemYellow
+        
+        if let color = TypeFormatter.shared.categoryColors[category] {
+            let textColor = color.isDark ? UIColor.white : UIColor.black
+            categoryLabel.textColor = textColor
+            contentView.backgroundColor = color
+        } else {
+            categoryLabel.textColor = .white
+            contentView.backgroundColor = .systemGray
+        }
     }
     
     // MARK: - Constraints

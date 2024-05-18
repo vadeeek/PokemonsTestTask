@@ -123,6 +123,7 @@ final class ItemsVC: UIViewController {
                 DispatchQueue.main.async {
                     guard let self else { return }
                     self.allItemCategories = allItemCategories
+                    TypeFormatter.shared.generateCategoryColors()
                     self.itemsView.itemCategoriesCollectionView.reloadData()
                 }
             case .failure(let error):

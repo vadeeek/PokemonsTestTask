@@ -10,6 +10,8 @@ final class TypeFormatter {
     // MARK: - Properties
     static let shared = TypeFormatter()
     
+    private(set) var categoryColors: [String: UIColor] = [:]
+    
     // MARK: - Methods
     func format(typeString: String) -> (String, UIColor) {
         let typesStrings: [String] = ["normal", "fighting", "flying", "poison", "ground", "rock", "bug", "ghost", "steel", "fire", "water", "grass", "electric", "psychic", "ice", "dragon", "dark", "fairy", "unknown", "shadow"]
@@ -38,5 +40,18 @@ final class TypeFormatter {
             let capitalizedFirstLetter = lowercasedString.prefix(1).capitalized + lowercasedString.dropFirst()
             return capitalizedFirstLetter
         }
+    }
+    
+    func generateCategoryColors() {
+        let categoryStrings: [String] = APIManager.shared.allItemCategories
+        var colors: [String: UIColor] = [:]
+        for i in 0..<categoryStrings.count {
+            let red = CGFloat.random(in: 0...1)
+            let green = CGFloat.random(in: 0...1)
+            let blue = CGFloat.random(in: 0...1)
+            let color = UIColor(red: red, green: green, blue: blue, alpha: 1.0)
+            colors[categoryStrings[i]] = color
+        }
+        self.categoryColors = colors
     }
 }
