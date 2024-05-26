@@ -30,6 +30,7 @@ final class APIManager: APIManagerProtocol {
 //    private let paginationLimit = 20
     private let baseUrlString = "https://pokeapi.co/api/v2/"
     private let pokemonsStartingListUrlString = "https://pokeapi.co/api/v2/pokemon/?limit=20"
+    let pokemonsImageUrlString = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/"
     private var pokemonsListNextPageUrlString: String? = nil
     private var isLastPage = false
     

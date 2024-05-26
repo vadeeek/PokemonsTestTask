@@ -91,12 +91,12 @@ final class PokemonsCell: UICollectionViewCell {
         if let pokemonID = pokemon.id {
             idLabel.text = "\(pokemonID)"
             //            APIManager.shared.getPokemonPicture(by: pokemonID) { [weak self] pokemonPictureData in
-            if let pictureUrlString = pokemon.pictureUrlString {
-                pokemonPicture.sd_setImage(with: URL(string: pictureUrlString)) { [weak self] _, _, _, _ in
-                    guard let self else { return }
-                    self.pokemonPicture.contentMode = .scaleAspectFit
-                    //        pokemonPicture.clipsToBounds = false
-                }
+//            if let pictureUrlString = pokemon.pictureUrlString {
+            let pictureUrlString = APIManager.shared.pokemonsImageUrlString + "\(pokemonID).png"
+            pokemonPicture.sd_setImage(with: URL(string: pictureUrlString)) { [weak self] _, _, _, _ in
+                guard let self else { return }
+                self.pokemonPicture.contentMode = .scaleAspectFit
+                //        pokemonPicture.clipsToBounds = false
             }
         } else {
             idLabel.text = "???"
