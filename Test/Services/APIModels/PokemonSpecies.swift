@@ -19,7 +19,7 @@ struct PokemonSpecies: Decodable {
 }
 
 // MARK: - EvolutionChainClass
-struct EvolutionChainClass: Codable {
+struct EvolutionChainClass: Decodable {
     let url: String?
 }
 

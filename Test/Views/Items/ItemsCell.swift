@@ -2,12 +2,12 @@ import UIKit
 import SnapKit
 import SDWebImage
 
-final class PokemonsCell: UICollectionViewCell {
+final class ItemsCell: UICollectionViewCell {
     
     // MARK: - Properties
-    static let id = "pokemons"
+    static let id = "items"
     
-    private var pokemonTypes: [String] = []
+    private var itemCategories: [String] = []
     
     private let nameLabel: UILabel = {
         let label = UILabel()
@@ -24,8 +24,8 @@ final class PokemonsCell: UICollectionViewCell {
         return label
     }()
     
-    private let pokemonPicture: UIImageView = {
-        let image = Resources.Images.Pokemon.pokemonPictureNoImage
+    private let itemPicture: UIImageView = {
+        let image = Resources.Images.Item.itemPictureNoImage
         let imageView = UIImageView(image: image)
         imageView.backgroundColor = .systemYellow
         imageView.contentMode = .scaleAspectFill
@@ -35,12 +35,12 @@ final class PokemonsCell: UICollectionViewCell {
         return imageView
     }()
     
-    let pokemonTypesCollectionView: UICollectionView = {
+    let itemCategoriesCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.sectionInset = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.register(PokemonTypeCell.self, forCellWithReuseIdentifier: PokemonTypeCell.id)
+        collectionView.register(ItemCategoryCell.self, forCellWithReuseIdentifier: ItemCategoryCell.id)
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.backgroundColor = .clear
         return collectionView
@@ -58,8 +58,8 @@ final class PokemonsCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        pokemonTypesCollectionView.dataSource = self
-        pokemonTypesCollectionView.delegate = self
+        itemCategoriesCollectionView.dataSource = self
+        itemCategoriesCollectionView.delegate = self
         
         setupUI()
         makeConstraints()
@@ -75,49 +75,43 @@ final class PokemonsCell: UICollectionViewCell {
     private func setupUI() {
         contentView.backgroundColor = .white
         contentView.layer.cornerRadius = 15
-        contentView.addSubviews(pokemonPicture, idLabel, shortInfoFrame, nameLabel,  pokemonTypesCollectionView)
+        contentView.addSubviews(itemPicture, idLabel, shortInfoFrame, nameLabel,  itemCategoriesCollectionView)
     }
     
     // DEBUG:
     private func debug() {
         nameLabel.backgroundColor = .green
         idLabel.backgroundColor = .red
-        pokemonTypesCollectionView.backgroundColor = .blue
+        itemCategoriesCollectionView.backgroundColor = .blue
     }
     
-    func configure(with pokemon: EnhancedPokemon) {
-        let pokemonName = pokemon.name ?? "???"
-        nameLabel.text = TypeFormatter.shared.format(type: .name(string: pokemonName))
+    func configure(with item: EnhancedItem) {
+        let categoryName = item.name ?? "???"
+        nameLabel.text = TypeFormatter.shared.format(type: .name(string: categoryName))
         
-        if let pokemonID = pokemon.id {
-            idLabel.text = "\(pokemonID)"
-            //            APIManager.shared.getPokemonPicture(by: pokemonID) { [weak self] pokemonPictureData in
-            if let pictureUrlString = pokemon.pictureUrlString {
-                pokemonPicture.sd_setImage(with: URL(string: pictureUrlString)) { [weak self] _, _, _, _ in
+        if let itemID = item.id {
+            idLabel.text = "\(itemID)"
+            if let pictureUrlString = item.pictureUrlString {
+                itemPicture.sd_setImage(with: URL(string: pictureUrlString)) { [weak self] _, _, _, _ in
                     guard let self else { return }
-                    self.pokemonPicture.contentMode = .scaleAspectFit
-                    //        pokemonPicture.clipsToBounds = false
+                    self.itemPicture.contentMode = .scaleAspectFit
                 }
             }
         } else {
             idLabel.text = "???"
         }
-        if let types = pokemon.types {
-            for type in types {
-                if let typeName = type.name {
-                    DispatchQueue.main.async {
-                        self.pokemonTypes.append(typeName)
-                        self.pokemonTypesCollectionView.reloadData()
-                    }
-                }
+        if let categoryName = item.category {
+            DispatchQueue.main.async {
+                self.itemCategories.append(categoryName)
+                self.itemCategoriesCollectionView.reloadData()
             }
         }
-        pokemonTypes.removeAll()
+        itemCategories.removeAll()
     }
     
     // MARK: - Constraints
     private func makeConstraints() {
-        pokemonPicture.snp.makeConstraints { make in
+        itemPicture.snp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
             make.bottom.equalTo(self.snp.bottom).multipliedBy(0.75)
         }
@@ -134,7 +128,7 @@ final class PokemonsCell: UICollectionViewCell {
             make.leading.trailing.bottom.equalToSuperview()
             make.top.equalTo(self.snp.bottom).multipliedBy(0.78)
         }
-        pokemonTypesCollectionView.snp.makeConstraints { make in
+        itemCategoriesCollectionView.snp.makeConstraints { make in
             make.leading.trailing.bottom.equalToSuperview()
             make.top.equalTo(self.snp.bottom).multipliedBy(0.86)
         }
@@ -143,30 +137,30 @@ final class PokemonsCell: UICollectionViewCell {
 
 // MARK: - Extensions
 // MARK: - UICollectionViewDataSource
-extension PokemonsCell: UICollectionViewDataSource {
+extension ItemsCell: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        pokemonTypes.count
+        itemCategories.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokemonTypeCell.id, for: indexPath) as? PokemonTypeCell else { fatalError("Unsupported cell") }
-        cell.configure(with: pokemonTypes[indexPath.row])
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ItemCategoryCell.id, for: indexPath) as? ItemCategoryCell else { fatalError("Unsupported cell") }
+        cell.configure(with: itemCategories[indexPath.row])
         return cell
     }
 }
 // MARK: - UICollectionViewDelegateFlowLayout
-extension PokemonsCell: UICollectionViewDelegateFlowLayout {
+extension ItemsCell: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         let bounds = collectionView.bounds.width
-        let width = (bounds) / 1.5
+        let width = (bounds) - 10
         return CGSize(
             width: width,
-            height: width / 4.6
+            height: width / 6.35
         )
     }
 }

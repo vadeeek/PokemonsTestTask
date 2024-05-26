@@ -26,24 +26,6 @@ struct Ability: Decodable {
     let ability: Species?
 }
 
-// MARK: - Sprites
-struct Sprites: Decodable {
-    
-    static func == (lhs: Sprites, rhs: Sprites) -> Bool {
-        return lhs.frontDefault == rhs.frontDefault
-    }
-    
-    let frontDefault: String?
-    
-    enum CodingKeys: String, CodingKey {
-        case frontDefault = "front_default"
-    }
-    // FIXME: - убрать этот код
-    //    init(frontDefault: String?) {
-    //        self.frontDefault = frontDefault
-    //    }
-}
-
 // MARK: - Stat
 struct Stat: Decodable, Equatable {
     
