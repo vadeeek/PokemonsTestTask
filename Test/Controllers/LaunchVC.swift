@@ -6,6 +6,10 @@ final class LaunchVC: UIViewController {
     var launchView: LaunchView { return self.view as! LaunchView }
     
     // MARK: - Life Cycle
+    override func loadView() {
+        self.view = LaunchView(frame: UIScreen.main.bounds)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -14,12 +18,12 @@ final class LaunchVC: UIViewController {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
             let tabBarController = TabBarController()
-            self.navigationController?.setViewControllers([tabBarController], animated: true)
+//            self.navigationController?.setViewControllers([tabBarController], animated: true)
             self.navigationController?.navigationBar.isHidden = true
             
             if var viewControllers = self.navigationController?.viewControllers {
                 // Удаляем контроллер
-                viewControllers = viewControllers.filter { !$0.isKind(of: LaunchVC.self) }
+                viewControllers = viewControllers.filter { !$0.isKind(of: LaunchVC.self) && !$0.isKind(of: TabBarController.self) }
                 
                 // Добавляем новый контроллер в стек
                 viewControllers.append(tabBarController)
@@ -28,9 +32,5 @@ final class LaunchVC: UIViewController {
                 self.navigationController?.setViewControllers(viewControllers, animated: true)
             }
         }
-    }
-    
-    override func loadView() {
-        self.view = LaunchView(frame: UIScreen.main.bounds)
     }
 }
