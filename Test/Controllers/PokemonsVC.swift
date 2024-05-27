@@ -6,6 +6,8 @@ final class PokemonsVC: UIViewController {
     private var pokemonsView: PokemonsView { return self.view as! PokemonsView }
     private var pokemonsViewModel: PokemonsViewModel
     
+    private var selectedCells: [IndexPath: CGFloat] = [:]
+    
     // MARK: - Life Cycle
     init(pokemonsViewModel: PokemonsViewModel) {
         self.pokemonsViewModel = pokemonsViewModel
@@ -14,6 +16,10 @@ final class PokemonsVC: UIViewController {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func loadView() {
+        self.view = PokemonsView(frame: UIScreen.main.bounds)
     }
     
     override func viewDidLoad() {
@@ -29,10 +35,6 @@ final class PokemonsVC: UIViewController {
         pokemonsView.pokemonTypesCollectionView.delegate = self
         
         getNextPagePokemonsList(isFirstPage: true)
-    }
-    
-    override func loadView() {
-        self.view = PokemonsView(frame: UIScreen.main.bounds)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -107,7 +109,7 @@ final class PokemonsVC: UIViewController {
 // MARK: - Extensions
 // MARK: - PokemonsViewModelDelegate
 extension PokemonsVC: PokemonsViewModelDelegate {
-    func didUpdatePokemons() {
+    func didUpdatePokemonsList() {
         DispatchQueue.main.async {
             self.pokemonsView.pokemonsCollectionView.reloadData()
         }
@@ -117,6 +119,24 @@ extension PokemonsVC: PokemonsViewModelDelegate {
         DispatchQueue.main.async {
             self.pokemonsView.pokemonTypesCollectionView.reloadData()
         }
+    }
+    
+    func didStartLoadingPokemons() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            self.pokemonsView.spinner.startAnimating()
+        }
+    }
+    
+    func didEndLoadingPokemons() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            self.pokemonsView.spinner.stopAnimating()
+        }
+    }
+    
+    func clearSelectedCells() {
+        self.selectedCells = [:]
     }
 }
 // MARK: - UICollectionViewDataSource
@@ -158,8 +178,8 @@ extension PokemonsVC: UICollectionViewDelegate {
             for cell in collectionView.visibleCells {
                 cell.contentView.alpha = 0.5
             }
-            selectedCells = [:]
-            selectedCells[indexPath] = 1.0
+            self.selectedCells = [:]
+            self.selectedCells[indexPath] = 1.0
             
             if let cell = collectionView.cellForItem(at: indexPath) {
                 cell.contentView.alpha = 1.0
@@ -175,15 +195,15 @@ extension PokemonsVC: UICollectionViewDelegate {
                 DispatchQueue.main.async { [weak self] in
                     guard let self else { return }
                     
-                    APIManager.shared.getPokemons(byPokemonType: self.allPokemonTypes[indexPath.row].lowercased()) { [weak self] result in
+                    APIManager.shared.getPokemons(byPokemonType: self.pokemonsViewModel.allPokemonTypes[indexPath.row].lowercased()) { [weak self] result in
                         guard let self else { return }
                         DispatchQueue.main.async {
                             switch result {
                             case .success(let enhancedPokemons):
                                 print("NEW DATA: \(enhancedPokemons)")
-                                self.filteredPokemonsData = enhancedPokemons
+                                self.pokemonsViewModel.filteredPokemons = enhancedPokemons
                                 self.pokemonsView.pokemonsCollectionView.reloadData()
-                                self.isPokemonTypesRequestInProgress = false
+                                self.pokemonsViewModel.isPokemonTypesRequestInProgress = false
                                 self.pokemonsView.spinner.stopAnimating()
                                 
                                 UIView.animate(withDuration: 0.7, delay: 0.0) { [weak self] in

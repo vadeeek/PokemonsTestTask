@@ -9,14 +9,14 @@ class PokemonsViewModel {
     var filteredPokemons: [EnhancedPokemon] = []
     var allPokemonTypes: [String] = []
     
-    private var selectedCells: [IndexPath: CGFloat] = [:]
+    
     
     var isPokemonsLoading = false
     var isPokemonTypesRequestInProgress = false
     
     // MARK: - Methods
-    func didUpdatePokemons() {
-        delegate?.didUpdatePokemons()
+    func didUpdatePokemonsList() {
+        delegate?.didUpdatePokemonsList()
     }
     
     func didUpdatePokemonTypes() {
@@ -29,6 +29,10 @@ class PokemonsViewModel {
     
     func fetchAllPokemonIDs() {
         APIManager.shared.fetchAllPokemonIDs()
+    }
+    
+    func clearSelectedCells() {
+        delegate?.clearSelectedCells()
     }
     
     func fetchAllPokemonTypes() {
@@ -51,8 +55,8 @@ class PokemonsViewModel {
     //    private func getPokemons(from pokemonsIDsArray: Set<Int>) {
     func getNextPagePokemonsList(isFirstPage: Bool = false) {
         guard !isPokemonsLoading else { return }
-        pokemonsView.spinner.startAnimating()
         
+        delegate?.didStartLoadingPokemons()
         isPokemonsLoading = true
 
         APIManager.shared.getNextPagePokemonsList(isFirstPage: isFirstPage) { [weak self] result in
@@ -61,7 +65,7 @@ class PokemonsViewModel {
             switch result {
             case .success(let enhancedPokemonsArray):
                 self.handleSuccessfulResponse(enhancedPokemonsArray)
-                self.pokemonsView.spinner.stopAnimating()
+                self.delegate?.didEndLoadingPokemons()
             case .failure(let error):
                 self.handleFailedResponse(error)
             }
@@ -74,7 +78,7 @@ class PokemonsViewModel {
             
             self.pokemons += enhancedPokemonsArray
             self.filteredPokemons += enhancedPokemonsArray
-            self.didUpdatePokemons()
+            self.didUpdatePokemonsList()
             self.isPokemonsLoading = false
         }
     }
@@ -98,8 +102,8 @@ class PokemonsViewModel {
                     guard let self else { return }
                     
                     self.filteredPokemons = enhancedPokemonsArray
-                    self.didUpdatePokemons()
-                    self.selectedCells = [:]
+                    self.didUpdatePokemonsList()
+                    self.clearSelectedCells()
                     self.didUpdatePokemonTypes()
                 }
             case .failure(let error):

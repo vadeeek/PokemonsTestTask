@@ -2,5 +2,8 @@ import Foundation
 
 protocol PokemonsViewModelDelegate: AnyObject {
     func didUpdatePokemonTypes()
-    func didUpdatePokemons()
+    func didUpdatePokemonsList()
+    func didStartLoadingPokemons()
+    func didEndLoadingPokemons()
+    func clearSelectedCells()
 }

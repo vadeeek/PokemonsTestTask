@@ -9,33 +9,33 @@ final class FirebaseManager {
     private let usersRef = Database.database().reference().child("Users")
     
     // MARK: - Methods
-    func updateFavoritePokemon(pokemon: EnhancedPokemon, from viewController: UIViewController) {
-        if let currentUser = Auth.auth().currentUser {
-            guard let pokemonId = pokemon.id else { return }
-            let userID = currentUser.uid
-            
-            let userFavoritesRef = usersRef.child(userID).child("Favorites/pokemons").child(String(pokemonId))
-            
-            userFavoritesRef.observeSingleEvent(of: .value) { snapshot, prevKey  in
-                if snapshot.exists() {
-                    self.removeFavoritePokemonForUser(pokemon: pokemon, userID: userID)
-                } else {
-                    self.saveFavoritePokemonForUser(pokemon: pokemon, userID: userID)
-                }
-            }
-        } else {
-            self.showLoginAlert(from: viewController)
-        }
-    }
+//    func updateFavoritePokemon(pokemon: EnhancedPokemon, from viewController: UIViewController) {
+//        if let currentUser = Auth.auth().currentUser {
+//            guard let pokemonId = pokemon.id else { return }
+//            let userID = currentUser.uid
+//            
+//            let userFavoritesRef = usersRef.child(userID).child("Favorites/pokemons").child(String(pokemonId))
+//            
+//            userFavoritesRef.observeSingleEvent(of: .value) { snapshot, prevKey  in
+//                if snapshot.exists() {
+//                    self.removeFavoritePokemonForUser(pokemon: pokemon, userID: userID)
+//                } else {
+//                    self.saveFavoritePokemonForUser(pokemon: pokemon, userID: userID)
+//                }
+//            }
+//        } else {
+//            self.showLoginAlert(from: viewController)
+//        }
+//    }
     
-    func saveFavoritePokemonForUser(pokemon: EnhancedPokemon, userID: String) {
-        guard let pokemonId = pokemon.id else { return }
-        let userFavoritesRef = usersRef.child(userID).child("Favorites/pokemons").child(String(pokemonId))
-        
-        var favoritePokemonDict = pokemon.toDictionary()
-        
-        userFavoritesRef.setValue(favoritePokemonDict)
-    }
+//    func saveFavoritePokemonForUser(pokemon: EnhancedPokemon, userID: String) {
+//        guard let pokemonId = pokemon.id else { return }
+//        let userFavoritesRef = usersRef.child(userID).child("Favorites/pokemons").child(String(pokemonId))
+//        
+//        var favoritePokemonDict = pokemon.toDictionary()
+//        
+//        userFavoritesRef.setValue(favoritePokemonDict)
+//    }
     
     func removeFavoritePokemonForUser(pokemon: EnhancedPokemon, userID: String) {
         guard let pokemonId = pokemon.id else { return }

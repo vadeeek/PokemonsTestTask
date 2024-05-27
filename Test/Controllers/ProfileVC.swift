@@ -8,6 +8,14 @@ final class ProfileVC: UIViewController {
     private var authorizedProfileView = AuthorizedProfileView(frame: UIScreen.main.bounds)
 
     // MARK: - Life Cycle
+    override func loadView() {
+        if Auth.auth().currentUser != nil {
+            self.view = authorizedProfileView
+        } else {
+            self.view = unauthorizedProfileView
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -15,14 +23,6 @@ final class ProfileVC: UIViewController {
         
         unauthorizedProfileView.delegate = self
         authorizedProfileView.delegate = self
-    }
-    
-    override func loadView() {
-        if Auth.auth().currentUser != nil {
-            self.view = authorizedProfileView
-        } else {
-            self.view = unauthorizedProfileView
-        }
     }
     
     // MARK: - Methods
