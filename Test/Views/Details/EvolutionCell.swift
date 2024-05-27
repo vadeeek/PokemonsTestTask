@@ -34,20 +34,19 @@ final class EvolutionCell: UICollectionViewCell {
     }()
     
     private let pokemonPicture: UIImageView = {
-        let imageView = UIImageView(image:  UIImage(named: ""))
+        let imageView = UIImageView(image: UIImage(named: ""))
         imageView.layer.cornerRadius = 49
+        imageView.layer.masksToBounds = true
         imageView.layer.borderColor = UIColor.white.cgColor
         imageView.layer.borderWidth = 4
         imageView.backgroundColor = .brown
-        imageView.contentMode = .scaleAspectFill
-//        imageView.clipsToBounds = true
+        imageView.contentMode = .scaleAspectFit
         imageView.layer.shadowColor = UIColor.black.cgColor
         imageView.layer.shadowOffset = CGSize(width: 7, height: 5)
-//        contentView.layer.shadowRadius = CGSize(width: <#T##Double#>, height: <#T##Double#>)
         imageView.layer.shadowOpacity = 0.3
         return imageView
     }()
-    
+
     private let arrowImage: UIImageView = {
         let image = Resources.Images.DetailsScreen.evolutionArrow
         let imageView = UIImageView(image: image)
@@ -83,8 +82,7 @@ final class EvolutionCell: UICollectionViewCell {
         self.nameLabel.text = evolutionCellModel.pokemon.name?.capitalized
         if let id = evolutionCellModel.pokemon.id {
             self.idLabel.text = "№ \(id)"
-        }
-        if let pictureUrlString = evolutionCellModel.pokemon.pictureUrlString {
+            let pictureUrlString = APIManager.shared.pokemonsImageUrlString + "\(id).png"
             pokemonPicture.sd_setImage(with: URL(string: pictureUrlString))
         }
         arrowImage.isHidden = evolutionCellModel.isLastEvolutionInChain
