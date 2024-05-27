@@ -51,42 +51,42 @@ struct EnhancedPokemon: Decodable, Equatable {
     }
 }
 
-extension EnhancedPokemon {
-    func toDictionary() -> [String: Any] {
-        var dict: [String: Any] = [:]
-        
-        dict["abilities"] = abilities?.map { $0.toDictionary() }
-        dict["height"] = height
-        dict["id"] = id
-        dict["name"] = name
-        dict["species"] = species?.toDictionary()
-        dict["pictureUrlString"] = pictureUrlString
-        dict["stats"] = stats?.map { $0.toDictionary() }
-        dict["types"] = types?.map { $0.toDictionary() }
-        dict["weight"] = weight
-        
-        return dict
-    }
-}
-
-extension Species {
-    func toDictionary() -> [String: Any] {
-        var dict: [String: Any] = [:]
-        
-        dict["name"] = name
-        dict["url"] = url
-        
-        return dict
-    }
-}
-
-extension Stat {
-    func toDictionary() -> [String: Any] {
-        var dict: [String: Any] = [:]
-        
-        dict["base_stat"] = baseStat
-        dict["stat"] = stat?.toDictionary()
-        
-        return dict
-    }
-}
+//extension EnhancedPokemon {
+//    func toDictionary() -> [String: Any] {
+//        var dict: [String: Any] = [:]
+//        
+//        dict["abilities"] = abilities?.map { $0.toDictionary() }
+//        dict["height"] = height
+//        dict["id"] = id
+//        dict["name"] = name
+//        dict["species"] = species?.toDictionary()
+//        dict["pictureUrlString"] = pictureUrlString
+//        dict["stats"] = stats?.map { $0.toDictionary() }
+//        dict["types"] = types?.map { $0.toDictionary() }
+//        dict["weight"] = weight
+//        
+//        return dict
+//    }
+//}
+//
+//extension Species {
+//    func toDictionary() -> [String: Any] {
+//        var dict: [String: Any] = [:]
+//        
+//        dict["name"] = name
+//        dict["url"] = url
+//        
+//        return dict
+//    }
+//}
+//
+//extension Stat {
+//    func toDictionary() -> [String: Any] {
+//        var dict: [String: Any] = [:]
+//        
+//        dict["base_stat"] = baseStat
+//        dict["stat"] = stat?.toDictionary()
+//        
+//        return dict
+//    }
+//}

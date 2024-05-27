@@ -31,9 +31,9 @@ final class PokemonsAllTypesCell: UICollectionViewCell {
         contentView.addSubviews(typeLabel)
     }
     
-    func configure(with ability: String) {
+    func configure(with type: String) {
 //        typeLabel.textColor = .black
-        switch TypeFormatter.shared.format(typeString: ability) {
+        switch TypeFormatter.shared.formate(typeString: type) {
         case (let typeString, let typeColor):
             switch typeColor {
             case .systemBlue, .darkGray, .black, .systemGray3, .purple:

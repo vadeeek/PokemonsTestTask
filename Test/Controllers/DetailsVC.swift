@@ -28,9 +28,9 @@ final class DetailsVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        print("currentPokemon: \(currentPokemon)")
-        
+        for i in currentPokemon.abilities! {
+            print(i)
+        }
         title = currentPokemon.name?.uppercased()
         addCompareButton()
         
@@ -248,6 +248,6 @@ extension DetailsVC: UICollectionViewDelegate {
 extension DetailsVC: DetailsViewDelegate {
     
     func updateFavoritePokemon() {
-        FirebaseManager.shared.updateFavoritePokemon(pokemon: currentPokemon, from: self)
+//        FirebaseManager.shared.updateFavoritePokemon(pokemon: currentPokemon, from: self)
     }
 }
