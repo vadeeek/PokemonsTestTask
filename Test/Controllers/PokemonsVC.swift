@@ -13,8 +13,6 @@ final class PokemonsVC: UIViewController {
     private var isPokemonsLoading = false
     private var isPokemonTypesRequestInProgress = false
     
-    private var selectedCells: [IndexPath: CGFloat] = [:]
-    
     // MARK: - Life Cycle
     init(pokemonsViewModel: PokemonsViewModel) {
         self.pokemonsViewModel = pokemonsViewModel
